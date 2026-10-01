@@ -9,6 +9,7 @@ var BASIS=(function(){var s=d.currentScript&&d.currentScript.src;return s?s.repl
 var DATEI=location.protocol==='file:';
 function ort(p){var u=BASIS+p;return DATEI?u.replace(/\/(\?|#|$)/,'/index.html$1'):u}
 var red=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function tick(n){try{if(!red&&navigator.vibrate&&matchMedia('(pointer: coarse)').matches)navigator.vibrate(n||8)}catch(e){}}
 var fein=matchMedia('(pointer: fine)').matches;
 function $(s,c){return (c||d).querySelector(s)}
 function $$(s,c){return Array.prototype.slice.call((c||d).querySelectorAll(s))}
@@ -71,7 +72,7 @@ if(d.readyState==='complete')setTimeout(spur,0);else addEventListener('load',fun
   var el=$('[data-stueckliste]');
   if(!root.classList.contains('intro')||!el){if(el)el.remove();START.los();return}
   var ul=$('[data-st-liste]',el),sum=$('[data-st-summe]',el);
-  var start=performance.now(),min=900,max=2400,fertig=false,gezeigt=0;
+  var start=performance.now(),min=700,max=1800,fertig=false,gezeigt=0;
   function zeile(e){
     var li=d.createElement('li');li.className='mono';
     [e.n,e.c?(EN?'from cache':'aus dem Cache'):zahl(e.b/1000,1)+' KB',zahl(e.t/1000,2)+' s'].forEach(function(t){var s=d.createElement('span');s.textContent=t;li.appendChild(s)});
@@ -88,8 +89,8 @@ if(d.readyState==='complete')setTimeout(spur,0);else addEventListener('load',fun
   function ende(){
     if(fertig)return;fertig=true;ss('sm-intro','1');
     removeEventListener('keydown',ende);removeEventListener('pointerdown',ende);removeEventListener('wheel',ende);removeEventListener('touchstart',ende);
-    el.classList.add('weg');root.classList.add('intro-aus');START.los();
-    setTimeout(function(){root.classList.remove('intro');el.remove()},480);
+    el.classList.add('weg');
+    setTimeout(function(){root.classList.add('intro-aus');START.los();root.classList.remove('intro');el.remove()},220);
   }
   addEventListener('keydown',ende);addEventListener('pointerdown',ende);addEventListener('wheel',ende,{passive:true});addEventListener('touchstart',ende,{passive:true});
   requestAnimationFrame(tick);
@@ -140,6 +141,13 @@ $$('picture.bild[data-bild]').forEach(function(p){
     if('IntersectionObserver' in window){var io=new IntersectionObserver(function(es){if(es[0].isIntersecting){io.disconnect();sichtbar=true;lade(aktiv())}},{rootMargin:'500px 0px'});io.observe(fe)}
     else{sichtbar=true;lade(aktiv())}
     var rt;addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){passe(aktiv())},100)});
+    /* Handy: im Fenster seitlich wischen wechselt die Arbeit; senkrechtes Scrollen bleibt der Seite */
+    (function(){var x0=0,y0=0,ok=false;
+      function cur(){for(var i=0;i<tafeln.length;i++)if(!tafeln[i].hidden)return i;return 0}
+      fe.addEventListener('touchstart',function(e){var b=e.target.closest&&e.target.closest('[data-fenster-bild]');ok=!!b&&!b.classList.contains('aktiv');if(ok){x0=e.touches[0].clientX;y0=e.touches[0].clientY}},{passive:true});
+      fe.addEventListener('touchend',function(e){if(!ok)return;ok=false;var t=e.changedTouches[0],dx=t.clientX-x0,dy=t.clientY-y0;
+        if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.5){var i=cur(),n=dx<0?i+1:i-1;if(n>=0&&n<tafeln.length){waehle(n);tick(10);var r=reiter[n];if(r&&r.scrollIntoView&&!red)r.scrollIntoView({block:'nearest',behavior:'smooth'})}}},{passive:true});
+    })();
     /* Touch: erst nach Tippen bedienbar, sonst hält das Fenster beim Scrollen der Seite den Finger fest */
     $$('[data-tippen]',fe).forEach(function(b){b.addEventListener('click',function(){b.closest('[data-fenster-bild]').classList.add('aktiv');b.hidden=true})});
   });
@@ -260,6 +268,25 @@ $$('picture.bild[data-bild]').forEach(function(p){
   d.addEventListener('mouseleave',function(){z.style.transform='translate(-50px,-50px)'});
 })();
 
+/* Schichten: beim Scrollen setzen sie sich zusammen. Der Fortschritt hängt am Scrollweg und beginnt erst, wenn der Stapel im Bild ist */
+(function(){
+  var f=$('[data-schichten]');if(!f||red)return;var w=false,lade=0;
+  function z(){w=false;var y=window.pageYOffset||root.scrollTop,top=f.getBoundingClientRect().top+y,s0=Math.max(0,top-innerHeight*.9),p=Math.min(1,Math.max(0,(y-s0)/420));
+    f.style.setProperty('--auf',((1-p*p*(3-2*p))*lade).toFixed(3))}
+  function q(){if(!w){w=true;requestAnimationFrame(z)}}
+  addEventListener('scroll',q,{passive:true});addEventListener('resize',q);z();
+  /* Beim Laden liegen die vier Zustände zusammen und ziehen sich einmal auseinander */
+  START.warte(function(){tween(1700,function(k){lade=k;z()})});
+})();
+
+/* Lesefortschritt: dünne Linie am unteren Rand des Kopfs (nur schmale Bildschirme, per CSS) */
+(function(){
+  var k=$('.kopf');if(!k)return;var l=d.createElement('div');l.className='fortschritt';l.setAttribute('aria-hidden','true');body.appendChild(l);
+  var w=false;function z(){w=false;var h=root.scrollHeight-innerHeight,p=h>0?Math.min(1,Math.max(0,(window.pageYOffset||root.scrollTop)/h)):0;l.style.transform='scaleX('+p+')'}
+  function q(){if(!w){w=true;requestAnimationFrame(z)}}
+  addEventListener('scroll',q,{passive:true});addEventListener('resize',q);z();
+})();
+$$('[data-menue]').forEach(function(m){m.addEventListener('toggle',function(){tick(8)})});
 /* Menü schließen bei Klick auf Link */
 $$('[data-menue] a').forEach(function(a){a.addEventListener('click',function(){var m=a.closest('details');if(m)m.open=false})});
 addEventListener('keydown',function(e){if(e.key==='Escape'){var m=$('[data-menue][open]');if(m)m.open=false}});
@@ -287,7 +314,7 @@ $$('[data-formular]').forEach(function(f){
       location.href='mailto:'+f.getAttribute('action').replace('mailto:','')+'?subject='+encodeURIComponent(EN?'Enquiry via simonmonu.at':'Anfrage über simonmonu.at')+'&body='+encodeURIComponent(txt);return}
     e.preventDefault();var k=$('button[type=submit]',f);if(k.disabled)return;k.disabled=true;meld.textContent=EN?'Sending …':'Wird gesendet …';
     fetch(ep,{method:'POST',body:new FormData(f),headers:{Accept:'application/json'}}).then(function(r){
-      if(r.ok)location.href=ort(EN?'en/thanks/':'danke/');else throw 0;
+      if(r.ok){tick([12,60,12]);location.href=ort(EN?'en/thanks/':'danke/')}else throw 0;
     }).catch(function(){k.disabled=false;meld.textContent=(EN?'That did not work, sorry. Please write directly to ':'Das hat leider nicht geklappt. Bitte schreiben Sie direkt an ')+((($('a[href^="mailto:"]')||{}).textContent)||(EN?'my email address':'meine E-Mail-Adresse'))+'.'});
   });
 });

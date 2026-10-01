@@ -9,9 +9,9 @@
 @font-face{font-family:"Fragment Ersatz";src:local("Courier New"),local("Liberation Mono");size-adjust:102.98%;ascent-override:92.25%;descent-override:24.28%;line-gap-override:0%}
 
 :root{
-  --papier:#FFFFFF;--papier-2:#F7F5F7;--linie:#E2DEE1;--linie-stark:#8A8489;
-  --tinte:#181317;--tinte-2:#514B50;--tinte-3:#70696F;
-  --signal:#AC20A6;--signal-flaeche:#FBEDF9;
+  --papier:#F4F4F1;--papier-2:#EBEBE6;--linie:#D5D8DE;--linie-stark:#7B849A;
+  --tinte:#0C1A33;--tinte-2:#3A4660;--tinte-3:#5A6580;
+  --signal:#2D55E8;--signal-flaeche:#E4EAFD;
   --sans:"Schibsted Grotesk","Schibsted Ersatz",system-ui,sans-serif;
   --mono:"Fragment Mono","Fragment Ersatz",ui-monospace,monospace;
   --t-display:clamp(2.75rem,1.5rem + 4.2vw,5rem);
@@ -30,18 +30,20 @@
 @media (min-width:1024px){:root{--rand:64px}}
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --papier:#130F13;--papier-2:#1D171C;--linie:#342E33;--linie-stark:#797278;
-    --tinte:#F2EFF1;--tinte-2:#C1BCC0;--tinte-3:#A29CA1;--signal:#E38FDB;--signal-flaeche:#341D32;color-scheme:dark}
+    --papier:#0B1426;--papier-2:#111D36;--linie:#233152;--linie-stark:#6F7FA3;
+    --tinte:#EAEEF7;--tinte-2:#B4BDD2;--tinte-3:#929EBB;--signal:#7FA2FF;--signal-flaeche:#1A2D5C;color-scheme:dark}
 }
 :root[data-theme="dark"]{
-  --papier:#130F13;--papier-2:#1D171C;--linie:#342E33;--linie-stark:#797278;
-  --tinte:#F2EFF1;--tinte-2:#C1BCC0;--tinte-3:#A29CA1;--signal:#E38FDB;--signal-flaeche:#341D32;color-scheme:dark}
+  --papier:#0B1426;--papier-2:#111D36;--linie:#233152;--linie-stark:#6F7FA3;
+  --tinte:#EAEEF7;--tinte-2:#B4BDD2;--tinte-3:#929EBB;--signal:#7FA2FF;--signal-flaeche:#1A2D5C;color-scheme:dark}
 
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;scroll-padding-top:calc(var(--kopfhoehe) + 16px);scroll-behavior:smooth}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 body{margin:0;background:var(--papier);color:var(--tinte);font-family:var(--sans);font-size:var(--t-text);line-height:1.6;font-weight:400;
-  text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;overflow-x:clip}
+  text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased}
+/* overflow-x:clip nicht am body: es kann position:sticky des Kopfs auf dem Handy aushebeln */
+main,.fuss{overflow-x:clip}
 img,picture,svg,video{display:block;max-width:100%}
 img{height:auto}
 button,input,select,textarea{font:inherit;color:inherit}
@@ -392,11 +394,13 @@ html.intro.frei .stueckliste:not(.weg){display:none}
 html.intro:not(.frei):not(.intro-aus) :is(.kopf,main,.fuss){visibility:hidden}
 .stueckliste ul{max-width:720px;width:100%;display:grid;gap:2px;align-content:start;min-height:calc(9 * 32px)}
 .stueckliste .st-summe{min-height:1.6em}
-.stueckliste li{display:grid;grid-template-columns:1fr auto auto;gap:24px;padding:4px 0;height:30px;align-items:center;border-bottom:1px solid var(--linie);opacity:0;animation:zeile-ein 240ms var(--e-ein) forwards;color:var(--tinte-2)}
+.stueckliste li{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:24px;padding:4px 0;height:30px;align-items:center;border-bottom:1px solid var(--linie);opacity:0;animation:zeile-ein 240ms var(--e-ein) forwards;color:var(--tinte-2)}
 .stueckliste li span:last-child{color:var(--signal)}
+.stueckliste li span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.stueckliste li span{white-space:nowrap}
 .stueckliste .st-kopf{color:var(--tinte-3);margin-bottom:16px}
 .stueckliste .st-summe{margin-top:16px;color:var(--signal)}
-.stueckliste.weg{animation:st-weg 480ms var(--e-inaus) forwards}
+.stueckliste.weg>*{opacity:0;transition:opacity 200ms var(--e-aus)}
 @keyframes zeile-ein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 @keyframes st-weg{to{opacity:0;transform:translateY(-24px)}}
 @media (prefers-reduced-motion:reduce){.stueckliste li{animation:none;opacity:1}.stueckliste.weg{animation:st-weg-weich 240ms linear forwards}@keyframes st-weg-weich{to{opacity:0}}}
@@ -411,7 +415,7 @@ html.intro:not(.frei):not(.intro-aus) :is(.kopf,main,.fuss){visibility:hidden}
   .zeiger-el.griff .zeiger-text{opacity:1}
   .zeiger-mass{position:absolute;left:12px;top:10px;white-space:nowrap;font-size:11px;letter-spacing:.02em;color:var(--tinte-3);transition:opacity 160ms}
   .zeiger-el.mit-text .zeiger-mass{opacity:0}
-  .zeiger-el.dunkel{--tinte:#F2EFF1;--tinte-3:#A29CA1;--papier:#181317;--linie:#342E33;--signal:#E38FDB}
+  .zeiger-el.dunkel{--tinte:#EEF1F8;--tinte-3:#8F9BB8;--papier:#0C1A33;--linie:#26375C;--signal:#7FA2FF}
 }
 
 .sek-hero .spur{position:relative}
@@ -422,15 +426,15 @@ noscript{display:none}
 
 /* --- Bühne: dunkle Fläche für die Arbeiten und den Kontakt -------------------
    Die Tokens werden im Abschnitt umgestellt, alles darin (Text, Linien, Knöpfe, Formular) folgt von selbst.
-   Kontraste gegen #181317: Tinte 16,1, Tinte 2 9,8, Tinte 3 6,8, Signal 8,1, Linie stark 3,9 (UI ≥ 3). */
+   Kontraste gegen #0C1A33: Tinte 15, Tinte 2 9, Tinte 3 6, Signal 6,6, Linie stark 4 (UI ≥ 3). */
 .sek-arbeiten,.sek-kontakt,.sek-schaufenster,.sek-case-bild,.sek-demo,.sek-anfrage{
-  --papier:#181317;--papier-2:#1D171C;--linie:#342E33;--linie-stark:#797278;
-  --tinte:#F2EFF1;--tinte-2:#C1BCC0;--tinte-3:#A29CA1;--signal:#E38FDB;--signal-flaeche:#341D32;
+  --papier:#0C1A33;--papier-2:#13264A;--linie:#26375C;--linie-stark:#6F7FA3;
+  --tinte:#EEF1F8;--tinte-2:#B4BDD2;--tinte-3:#8F9BB8;--signal:#7FA2FF;--signal-flaeche:#1A2D5C;
   background:var(--papier);color:var(--tinte);color-scheme:dark}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) :is(.sek-arbeiten,.sek-kontakt,.sek-schaufenster,.sek-case-bild,.sek-demo,.sek-anfrage){--papier:#1D171C;--papier-2:#241D23}}
-:root[data-theme="dark"] :is(.sek-arbeiten,.sek-kontakt,.sek-schaufenster,.sek-case-bild,.sek-demo,.sek-anfrage){--papier:#1D171C;--papier-2:#241D23}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) :is(.sek-arbeiten,.sek-kontakt,.sek-schaufenster,.sek-case-bild,.sek-demo,.sek-anfrage){--papier:#08111F;--papier-2:#0F1C36}}
+:root[data-theme="dark"] :is(.sek-arbeiten,.sek-kontakt,.sek-schaufenster,.sek-case-bild,.sek-demo,.sek-anfrage){--papier:#08111F;--papier-2:#0F1C36}
 .sek-case-bild{padding-block:var(--kopf-inhalt)}
-/* Auf der Bühne trägt der Hauptknopf die Signalfarbe (Text #181317 auf #E38FDB: 8,1) */
+/* Auf der Bühne trägt der Hauptknopf die Signalfarbe (Text #0C1A33 auf Signal #7FA2FF: 7) */
 :is(.sek-arbeiten,.sek-kontakt,.sek-schaufenster,.sek-case-bild,.sek-demo,.sek-anfrage) .knopf:not(.knopf-2){background:var(--signal);border-color:var(--signal);color:var(--papier)}
 .sek-case-bild+.sek::before,.sek-arbeiten+.sek::before,.sek-schaufenster+.sek::before,.sek-demo+.sek::before{display:none}
 
@@ -502,12 +506,9 @@ html.js .fenster-bild:not(.aktiv) iframe{pointer-events:none}
 .hero-bild{margin-top:clamp(28px,5vw,40px)}
 .hero-innen .spur{text-align:left}
 @media (min-width:1180px){
-  .hero-innen{grid-template-columns:minmax(0,7fr) minmax(0,5fr);grid-template-rows:repeat(5,auto) 1fr;column-gap:var(--spalte)}
+  .hero-innen{grid-template-columns:minmax(0,7fr) minmax(0,5fr);grid-template-rows:repeat(4,auto) 1fr;column-gap:var(--spalte)}
   .hero-bild{grid-column:2;grid-row:1 / -1;margin-top:0;align-self:center}
 }
-.hero-bild .z-schmal{display:block;max-width:250px}
-.hero-bild .z-voll{display:none}
-@media (min-width:640px){.hero-bild .z-schmal{display:none}.hero-bild .z-voll{display:block;max-width:560px}}
 
 /* Explosionszeichnung: Linie, Papier, Tinte. Magenta nur für die live gemessene Summe. */
 .zeichnung{width:100%;height:auto;overflow:visible}
@@ -575,20 +576,157 @@ html.js .fenster-bild:not(.aktiv) iframe{pointer-events:none}
 
 /* Arbeiten als nummerierte Liste (Reiter der Startseite) */
 .fenster-reiter .reiter-liste{counter-reset:r;grid-template-columns:1fr;gap:0;border-top:1px solid var(--linie-stark)}
-.fenster-reiter .reiter{counter-increment:r;display:grid;grid-template-columns:auto 1fr;grid-template-areas:"z n" "z p" "z m";column-gap:16px;row-gap:2px;align-items:baseline;border:0;border-bottom:1px solid var(--linie);padding:18px 4px;min-height:64px;width:100%;box-shadow:none}
-.fenster-reiter .reiter::before{content:"0" counter(r);grid-area:z;font-family:var(--mono);font-size:var(--t-meta);color:var(--tinte-3);padding-top:.5em}
+.fenster-reiter .reiter{display:grid;grid-template-columns:1fr;grid-template-areas:"n" "p" "m";column-gap:16px;row-gap:2px;align-items:baseline;border:0;border-bottom:1px solid var(--linie);padding:18px 4px;min-height:64px;width:100%;box-shadow:none}
 .fenster-reiter .reiter-name{grid-area:n;font-size:var(--t-m);letter-spacing:-.015em;line-height:1.15;color:var(--tinte-2)}
 .fenster-reiter .reiter-paket{grid-area:p;font-size:var(--t-meta);color:var(--tinte-3);margin:0;text-align:left;max-width:none}
 .fenster-reiter .reiter-marke{grid-area:m;font-size:var(--t-meta)}
 .fenster-reiter .reiter[aria-selected="true"]{box-shadow:none;border-bottom-color:var(--signal)}
 .fenster-reiter .reiter[aria-selected="true"] .reiter-name{color:var(--tinte)}
-.fenster-reiter .reiter[aria-selected="true"]::before{color:var(--signal)}
 .fenster-reiter .reiter[aria-selected="true"] .reiter-paket{color:var(--tinte-2)}
 @media (min-width:900px){
-  .fenster-reiter .reiter{grid-template-columns:3.5rem minmax(0,1fr) auto auto;grid-template-areas:"z n p m";column-gap:24px;align-items:center;padding:22px 4px}
-  .fenster-reiter .reiter::before{padding-top:0}
+  .fenster-reiter .reiter{grid-template-columns:minmax(0,1fr) auto auto;grid-template-areas:"n p m";column-gap:24px;align-items:center;padding:22px 4px}
   .fenster-reiter .reiter-name{font-size:clamp(1.9rem,1.2rem + 1.8vw,3rem);letter-spacing:-.025em}
   .fenster-reiter .reiter-paket,.fenster-reiter .reiter-marke{font-size:15px;white-space:nowrap}
   .fenster-reiter .reiter-marke{min-width:9.5em;text-align:right}
 }
 @media (hover:hover) and (pointer:fine){.fenster-reiter .reiter:hover .reiter-name{color:var(--tinte)}}
+
+/* --- Handy: Lesefortschritt, wischbares Schaufenster ----------------------- */
+.fortschritt{display:none}
+@media (max-width:1023px){
+  .fortschritt{display:block;position:fixed;left:0;right:0;top:0;z-index:60;height:3px;background:var(--signal);transform-origin:0 50%;transform:scaleX(0);pointer-events:none}
+  html.js .fenster-bild:not(.aktiv){touch-action:pan-y}
+}
+@media (prefers-reduced-motion:reduce){.fortschritt{transition:none}}
+
+/* --- Schichten: vier echte Zustände dieser Seite, auseinandergezogen; beim Scrollen setzen sie sich zusammen.
+   --auf (1 → 0) schreibt seite.js beim Scrollen. Ohne Skript bleibt der Stapel auseinandergezogen. ------------------ */
+.schichten{margin:0;max-width:640px;--gap:78px;--auf:1;--pw:min(72%,450px)}
+.stapel{position:relative;height:clamp(320px,92vw,560px);perspective:1500px;perspective-origin:50% 40%}
+.platte{position:absolute;left:50%;top:50%;width:var(--pw);aspect-ratio:560/400;margin:calc(var(--pw) * -.42) 0 0 calc(var(--pw) / -2);background:#fff;
+  box-shadow:0 0 0 1px var(--linie-stark);
+  transform:rotateX(56deg) rotateZ(-36deg) translateZ(calc((var(--i) - 1.5) * (7px + var(--gap) * var(--auf))));will-change:transform}
+.p0{--i:0}.p1{--i:1}.p2{--i:2}.p3{--i:3}
+.platte img{display:block;width:100%;height:100%}
+.schicht-liste{list-style:none;margin:8px 0 0;padding:0;border-top:1px solid var(--linie-stark)}
+.schicht-liste li{display:grid;grid-template-columns:2.4em minmax(0,1fr) auto;gap:12px;align-items:baseline;padding:9px 0;border-bottom:1px solid var(--linie);font-size:var(--t-meta);color:var(--tinte-2)}
+.sl-nr,.sl-wert{font-family:var(--mono);color:var(--tinte-3)}
+.sl-name{color:var(--tinte)}
+.schichten .spur{margin:14px 0 0;text-align:left}
+@media (prefers-reduced-motion:reduce){.platte{will-change:auto}}
+
+/* --- Blaupause: Nachtblau als Tinte und Bühne, kühles Papier zum Lesen, ein Kobalt nur für Live-Werte und Markierungen ----
+   Papier #F4F4F1 trägt Tinte #0C1A33 mit 16:1, Kobalt #2D55E8 erreicht 5,6:1 (Text), Tinte 3 5,3:1. */
+.sek-statement{background:var(--papier-2)}
+.sek-hero .platte,.sek-kopfseite .platte{box-shadow:0 0 0 1px var(--tinte)}
+.kopf{border-bottom-color:var(--linie-stark)}
+
+/* --- Maßstab: Gewicht, Linien, Größen. Der Kontrast zwischen laut und leise macht die Seite lesbar und eigen. ---------- */
+h1,h2,.t-display,.t-xl,.t-l{font-weight:600}
+.hero-innen h1{letter-spacing:-.04em}
+.t-xl{letter-spacing:-.035em}
+.sek-beleg{background:var(--papier);border-block:2px solid var(--tinte)}
+.werte dd.mono:not(.klein){font-size:clamp(2.4rem,1.3rem + 3.2vw,4.8rem);letter-spacing:-.045em;font-weight:400}
+.werte{border-top-width:2px}
+.datenblatt thead th{border-bottom:2px solid var(--tinte)}
+.datenblatt tbody th{font-weight:600}
+.db-preis>span:first-child{font-weight:600;font-size:clamp(1.6rem,1.1rem + 1.5vw,2.6rem);letter-spacing:-.035em}
+.schiene li::before{height:3px;background:var(--tinte)}
+.ab-nr{font-family:var(--sans);font-size:clamp(3rem,2rem + 3vw,5rem);font-weight:600;letter-spacing:-.05em;line-height:.9;color:var(--tinte)}
+.schiene{gap:40px}
+.schiene li{padding-top:20px;gap:12px}
+.schiene h3{font-weight:600}
+.statement{max-width:15ch;font-size:clamp(3rem,1.5rem + 5.2vw,6.6rem);line-height:.98;letter-spacing:-.045em;font-weight:600}
+.fenster-reiter .reiter-liste{border-top:2px solid var(--tinte)}
+.fenster-reiter .reiter-name{font-weight:600}
+.knopf{font-weight:600}
+
+/* --- Veredelung: ein Datenblatt-Prinzip für die ganze Seite -------------------------------------------------------
+   Messprotokoll statt Zahlenkacheln, Zeilen statt vier gleicher Spalten, Schrift statt Zeichnung. */
+html{text-rendering:optimizeLegibility;font-kerning:normal}
+.lead,.ueber-text,.zahlung{text-wrap:pretty}
+.sek-hero .platte,.sek-kopfseite .platte{box-shadow:0 0 0 1px var(--tinte),0 26px 44px -22px rgb(12 26 51 / .5)}
+.hero-innen{align-content:center}
+
+.beleg{align-items:start}
+.beleg .werte{grid-template-columns:1fr;gap:0;border-top:2px solid var(--tinte);margin:0}
+.beleg .werte>div{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"t v" "k v";column-gap:24px;align-items:center;border-top:0;border-bottom:1px solid var(--linie-stark);padding:18px 0}
+.beleg .werte dt{grid-area:t;color:var(--tinte);font-weight:600;font-size:1rem}
+.beleg .werte dd.klein{grid-area:k;margin:2px 0 0;color:var(--tinte-2)}
+.beleg .werte dd.mono:not(.klein){grid-area:v;margin:0;text-align:right;font-size:clamp(2rem,1.2rem + 2.4vw,3.6rem);line-height:1}
+
+.indexliste{list-style:none;margin:0;padding:0;border-top:2px solid var(--tinte)}
+.indexliste li{display:grid;gap:6px;padding:24px 0;border-bottom:1px solid var(--linie-stark)}
+.hl-titel{font-size:clamp(1.4rem,1.1rem + 1vw,2rem);font-weight:600;letter-spacing:-.025em;line-height:1.1}
+.hl-text{color:var(--tinte-2);max-width:30em}
+.handwerk-bild{max-width:none}
+
+.schiene{grid-template-columns:1fr;gap:0}
+.schiene li{display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-areas:"n h" "n p";column-gap:24px;row-gap:8px;padding:28px 0;align-content:start}
+.schiene li::before{height:1px;background:var(--linie-stark)}
+.schiene li:first-child::before{height:2px;background:var(--tinte)}
+.schiene li:last-child{border-bottom:1px solid var(--linie-stark)}
+.schiene .ab-nr{grid-area:n;min-width:2ch}
+.schiene h3{grid-area:h;font-size:clamp(1.4rem,1.1rem + 1vw,2rem);letter-spacing:-.025em;line-height:1.1}
+.schiene p{grid-area:p;font-size:1.0625rem;max-width:34em}
+@media (min-width:768px){
+  .schiene li{grid-template-columns:minmax(5rem,1fr) minmax(0,4fr) minmax(0,5fr);grid-template-areas:"n h p";column-gap:var(--spalte);align-items:baseline}
+}
+@media (min-width:1024px){
+  .beleg{grid-template-columns:5fr 6fr}
+  .beleg .werte{grid-template-columns:1fr}
+  .handwerk-text{grid-column:1/7}.handwerk-bild{grid-column:8/13;align-self:center}
+}
+
+/* --- Platten: dieselbe Startseite in vier Stufen. Das Markup ist identisch, nur das Stylesheet wächst. -------------------
+   Alle Maße in cqw (Prozent der Plattenbreite), darum skaliert alles mit und bleibt auf jedem Bildschirm scharf.
+   Feste Farben: Die Platten sind „Blätter“ und bleiben auch im dunklen Modus hell. */
+.platte{container-type:inline-size;overflow:hidden;background:#fff;will-change:auto;box-shadow:0 0 0 1px rgb(12 26 51 / .85),0 28px 46px -24px rgb(12 26 51 / .55)}
+.pl{position:absolute;inset:0;display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);grid-template-rows:auto 1fr;column-gap:4cqw;padding:4.6cqw 5.4cqw 5cqw;color:#0C1A33;font-family:var(--sans);line-height:1.2;text-align:left;font-weight:400}
+.pl-nav{grid-column:1/-1;display:flex;align-items:center;gap:3.2cqw;font-size:2.1cqw;padding-bottom:2.6cqw;border-bottom:.22cqw solid #7B849A}
+.pl-nav b{margin-right:auto;font-weight:600}
+.pl-haupt{align-self:center;grid-row:2}
+.pl-h{font-size:7.3cqw;line-height:.97;font-weight:600;letter-spacing:-.04em}
+.pl-lead{font-size:2.45cqw;line-height:1.42;margin-top:3.2cqw;color:#3A4660;max-width:92%}
+.pl-knoepfe{display:flex;gap:1.8cqw;margin-top:3.6cqw;font-size:2.25cqw;font-weight:600}
+.pl-knoepfe>span{padding:1.8cqw 2.8cqw;white-space:nowrap}
+.pl-k1{background:#0C1A33;color:#F4F4F1}
+.pl-k2{border:.22cqw solid #7B849A}
+.pl-tafel{grid-column:2;grid-row:2;align-self:end;display:grid;border-top:.5cqw solid #0C1A33;font-family:var(--mono);font-size:1.9cqw}
+.pl-z{display:flex;justify-content:space-between;gap:2cqw;padding:1.7cqw 0;border-bottom:.2cqw solid #D5D8DE}
+.pl-z>span:last-child{color:#2D55E8}
+.pk-fertig{background:#F4F4F1}
+
+.pk-schrift .pl-k1{background:none;color:#0C1A33}
+.pk-schrift .pl-k2,.pk-schrift .pl-nav,.pk-schrift .pl-tafel,.pk-schrift .pl-z{border-color:transparent}
+.pk-schrift .pl-z>span:last-child,.pk-schrift .pl-lead{color:#0C1A33}
+.pk-schrift .pl{color:#0C1A33}
+
+.pk-raster .pl{color:transparent}
+.pk-raster .pl *{color:transparent!important;background:none!important;border-color:transparent!important}
+.pk-raster::before{content:"";position:absolute;inset:0 5.4cqw;background-image:linear-gradient(90deg,rgb(45 85 232 / .13) 82%,transparent 82%);background-size:calc(100% / 12) 100%}
+.pk-raster :is(.pl-nav,.pl-h,.pl-lead,.pl-knoepfe>span,.pl-tafel){outline:.25cqw solid #2D55E8;outline-offset:-.1cqw}
+.pk-raster .pl{z-index:1}
+
+.pk-inhalt .pl{display:block;padding:4.2cqw 5cqw;font-family:"Times New Roman",Times,serif;font-size:2.7cqw;line-height:1.25;color:#000}
+.pk-inhalt .pl-nav{display:flex;gap:2cqw;border:0;padding:0 0 2.2cqw;font-size:2.4cqw;color:#0000ee;text-decoration:underline}
+.pk-inhalt .pl-nav b{color:#000;text-decoration:none;font-weight:700}
+.pk-inhalt .pl-h{font-size:4.8cqw;line-height:1.15;font-weight:700;letter-spacing:0}
+.pk-inhalt .pl-h br{display:none}
+.pk-inhalt .pl-lead{font-size:2.7cqw;line-height:1.3;margin-top:2cqw;color:#000;max-width:none}
+.pk-inhalt .pl-knoepfe{margin-top:2cqw;gap:2cqw;font-size:2.7cqw;font-weight:400;color:#0000ee;text-decoration:underline}
+.pk-inhalt .pl-knoepfe>span{padding:0;background:none;border:0;color:#0000ee}
+.pk-inhalt .pl-tafel{display:block;margin-top:2.6cqw;border:0;font-family:inherit;font-size:2.7cqw}
+.pk-inhalt .pl-z{display:block;border:0;padding:0}
+.pk-inhalt .pl-z>span:last-child{color:#000}
+.pk-inhalt .pl-z>span:last-child::before{content:" – "}
+.pk-inhalt .pl-z>span{display:inline}
+
+/* --- Ohne Ziffern: Die Reihenfolge zeigen Zeilen und Linien, nicht Nummern. ------------------------------------------ */
+.schicht-liste li{grid-template-columns:minmax(0,1fr) auto}
+.schiene li{grid-template-columns:minmax(0,1fr);grid-template-areas:"h" "p";padding:30px 0}
+.schiene h3{font-size:clamp(1.55rem,1.15rem + 1.4vw,2.4rem);font-weight:600}
+@media (min-width:768px){
+  .schiene li{grid-template-columns:minmax(0,5fr) minmax(0,6fr);grid-template-areas:"h p";column-gap:var(--spalte);align-items:baseline}
+}
+@media (min-width:768px){.schiene li{align-items:start}.schiene p{padding-top:.5rem}}
