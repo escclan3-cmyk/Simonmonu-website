@@ -1,0 +1,16 @@
+{
+ "name": "Simon Monu, Webdesign",
+ "short_name": "Simon Monu",
+ "lang": "de-AT",
+ "start_url": "/",
+ "display": "browser",
+ "background_color": "#FFFFFF",
+ "theme_color": "#FFFFFF",
+ "icons": [
+  {
+   "src": "/assets/icons/apple-touch-icon.png",
+   "sizes": "180x180",
+   "type": "image/png"
+  }
+ ]
+}
