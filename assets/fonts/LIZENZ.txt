@@ -1,0 +1,11 @@
+Schriften auf simonmonu.at
+
+Schibsted Grotesk
+Copyright 2023 The Schibsted-Grotesk Project Authors (https://github.com/schibsted/schibsted-grotesk)
+
+Fragment Mono
+Copyright 2022 The Fragment-Mono Project Authors (https://github.com/weiweihuanghuang/fragment-mono)
+
+Beide Schriften stehen unter der SIL Open Font License, Version 1.1.
+Lizenztext: https://openfontlicense.org
+Die Dateien sind unveränderte Teilmengen (latin) aus Google Fonts.

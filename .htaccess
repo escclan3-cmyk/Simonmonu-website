@@ -1,0 +1,15 @@
+# Apache-Variante von _headers (erzeugt von generator/bau.py)
+<IfModule mod_headers.c>
+  Header always set Content-Security-Policy "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self' https://formspree.io/f/xwlpyyoq; media-src 'self'; frame-src 'self'; form-action 'self' https://formspree.io/f/xwlpyyoq; base-uri 'self'; object-src 'none'; manifest-src 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+  Header always set Cross-Origin-Opener-Policy "same-origin"
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+  <FilesMatch "\.(woff2)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>
+ErrorDocument 404 /404.html
+DirectoryIndex index.html
+
