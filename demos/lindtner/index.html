@@ -229,13 +229,9 @@ to{clip-path:inset(0 0 0 0);transform:scale(1)}
 .about .wrap{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(48px,8vw,144px);align-items:start}
 .about h2{font:200 clamp(2.25rem,1.4rem + 2.6vw,3.75rem)/1.05 var(--serif);letter-spacing:-.025em;margin-bottom:clamp(40px,5vw,72px)}
 .about .shot{max-width:520px}
-/* Platz für das Porträt: Beim Coaching kauft man die Person */
+/* Porträt: Beim Coaching kauft man die Person */
 .portrait{margin:0;max-width:440px}
-.portrait .slot{aspect-ratio:4/5;background:var(--deep);color:var(--ond);display:grid;align-content:space-between;padding:clamp(24px,3vw,36px);position:relative;overflow:hidden}
-.portrait .mono{font:200 clamp(5rem,3rem + 6vw,8.5rem)/.8 var(--serif);letter-spacing:-.05em;color:var(--ond);opacity:.9}
-.portrait .mono i{font-style:normal;color:var(--akzent)}
-.portrait .slot p{font-size:.9375rem;line-height:1.5;color:var(--ond-soft);max-width:30ch}
-.portrait .slot p strong{display:block;font-weight:500;color:var(--ond);margin-bottom:4px}
+.portrait img{display:block;width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;background:var(--deep)}
 .portrait figcaption{margin-top:14px;font-size:.875rem;line-height:1.5;color:var(--soft)}
 .prose{display:grid;gap:1.2em;max-width:58ch;padding-top:.6em}
 .prose .first{font:300 clamp(1.375rem,1.15rem + .6vw,1.75rem)/1.45 var(--serif);letter-spacing:-.005em}
@@ -482,11 +478,8 @@ to{clip-path:inset(0 0 0 0);transform:scale(1)}
     <div>
       <h2 id="about-h">Ich habe alle drei Wendepunkte selbst genommen.</h2>
       <figure class="portrait">
-        <div class="slot" role="img" aria-label="Platz für das Porträt von Vera Lindtner">
-          <span class="mono" aria-hidden="true">V<i>.</i>L</span>
-          <p><strong>Porträt Vera Lindtner</strong>Hochformat, Tageslicht in der Praxis, Blick in die Kamera. Kommt aus dem Fotoshooting.</p>
-        </div>
-        <figcaption>In der Demo ein Platzhalter. Beim Coaching entscheiden sich die meisten für eine Person, nicht für ein Format.</figcaption>
+        <img src="img/vera-s.webp" srcset="img/vera-s.webp 800w, img/vera-l.webp 1200w" sizes="(max-width:1080px) 100vw, 440px" width="800" height="1000" alt="Porträt einer Frau mit langen braunen Haaren, die am Fenster lehnt und ruhig in die Kamera blickt (Stockfoto)" loading="lazy" decoding="async">
+        <figcaption>Stockfoto, nicht Vera Lindtner (Foto: Mayara Caroline Mombelli, Pexels). Beim Coaching entscheiden sich die meisten für eine Person, nicht für ein Format.</figcaption>
       </figure>
     </div>
     <div>
