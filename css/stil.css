@@ -104,7 +104,7 @@ noscript{display:none}
   content:"";position:absolute;top:0;left:max(var(--rand),calc((100% - 1440px) / 2 + var(--rand)));right:max(var(--rand),calc((100% - 1440px) / 2 + var(--rand)));height:1px;background:var(--linie)}
 .sek-kopf{max-width:48em;margin-bottom:var(--luft)}
 .knoepfe{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;margin-top:28px}
-:is(.alle,.ueber-link,.knoepfe,.fehler-links,.preis-hinweis,.werk-wege,.werke-mehr,.fenster-links,.arbeit-wege) a{display:inline-block;padding-block:6px}
+:is(.alle,.ueber-link,.knoepfe,.fehler-links,.preis-hinweis,.werk-wege,.werke-mehr,.fenster-links,.arbeit-wege) a:not(.knopf){display:inline-block;padding-block:6px}
 
 /* --- Knöpfe --------------------------------------------------------------------------------------------------- */
 .knopf{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:50px;padding:.14em 26px 0;
@@ -164,6 +164,9 @@ html:has(.menue[open]){overflow:hidden}
 .sek-hero{padding-top:clamp(36px,4.6vw,80px);padding-bottom:clamp(40px,4.6vw,72px)}
 .hero-innen{display:grid;grid-template-columns:minmax(0,1fr);row-gap:24px;position:relative}
 .hero-titel{font-size:var(--t-hero);line-height:.96;letter-spacing:-.04em;font-weight:500;max-width:11em}
+/* Zeile über der H1: der Suchbegriff, klein, gehört aber zur Überschrift */
+.h1-dach{display:block;font-size:var(--t-klein);line-height:1.3;letter-spacing:0;font-weight:500;color:var(--tinte-2);margin-bottom:16px}
+.hero-titel .h1-dach{margin-bottom:clamp(16px,1.6vw,24px)}
 .hero-text .lead{margin-top:0;max-width:30em;color:var(--tinte-2)}
 .hero-text .knoepfe{margin-top:22px}
 @media (min-width:1024px){

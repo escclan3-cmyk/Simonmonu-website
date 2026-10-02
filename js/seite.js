@@ -100,7 +100,7 @@ function messung(){
     var s=d.createElement('span');el.appendChild(s);kopf.appendChild(el);
     function mess(){
       var rs=[],tw=d.createTreeWalker(h1,NodeFilter.SHOW_TEXT),n;
-      while((n=tw.nextNode())){if(!n.textContent.trim())continue;var r=d.createRange();r.selectNodeContents(n);Array.prototype.push.apply(rs,Array.prototype.slice.call(r.getClientRects()).filter(function(x){return x.width>2}))}
+      while((n=tw.nextNode())){if(!n.textContent.trim()||n.parentNode.closest('.h1-dach'))continue;var r=d.createRange();r.selectNodeContents(n);Array.prototype.push.apply(rs,Array.prototype.slice.call(r.getClientRects()).filter(function(x){return x.width>2}))}
       if(!rs.length)return;
       var l=Math.min.apply(null,rs.map(function(x){return x.left})),re=Math.max.apply(null,rs.map(function(x){return x.right})),un=Math.max.apply(null,rs.map(function(x){return x.bottom}));
       var b=kopf.getBoundingClientRect();
