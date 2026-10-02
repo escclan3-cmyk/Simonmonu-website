@@ -218,70 +218,45 @@ html.js:not(.ruhig) .masslinie:not(.an)::after,html.js:not(.ruhig) .masslinie:no
   .werk-3{grid-column:8/13;margin-top:clamp(48px,6vw,104px)}
 }
 
-/* --- Wie eine Seite entsteht ---------------------------------------------------------------------------------- */
-.folge-raster{display:grid;gap:var(--luft)}
-.folge-text .lead{max-width:30em}
-.schritte{margin-top:var(--luft);border-top:1px solid var(--tinte)}
-.schritt{padding:18px 0 20px;border-bottom:1px solid var(--linie);display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:16px;row-gap:4px;transition:opacity 400ms var(--e-schnell)}
-.schritt::before{content:"";grid-row:1/3;width:9px;height:9px;margin-top:.62em;border:1px solid var(--linie-stark);transition:background-color 300ms var(--e-schnell),border-color 300ms var(--e-schnell)}
-.schritt h3{font-size:var(--t-m);letter-spacing:-.02em;line-height:1.2}
-.schritt p{color:var(--tinte-2);max-width:32em}
-html.js .folge-an .schritt{opacity:.55}
-html.js .folge-an .schritt.ist{opacity:1}
-.schritt.ist::before{background:var(--signal);border-color:var(--signal)}
-.folge-buehne{position:relative}
-@media (max-width:1023px){
-  /* Handy: das Bild steht über den Schritten und bleibt beim Scrollen oben stehen */
-  .folge-buehne{order:-1;position:sticky;top:calc(var(--kopfhoehe) + 8px);z-index:2;background:var(--papier);padding-bottom:10px;margin-inline:calc(var(--rand) * -1);padding-inline:var(--rand)}
-}
+/* --- Derselbe Text: Vorher/Nachher-Schieber ------------------------------------------------------------------ */
+/* Unten liegt die fertige Seite, darüber die Rohfassung, sichtbar links von --x. Bilder sind immer hell,
+   darum haben Linie, Griff und Marken feste Farben statt der Themen-Tokens. */
+@property --x{syntax:"<percentage>";inherits:true;initial-value:50%}
+.schieber-kopf{display:grid;gap:14px;margin-bottom:var(--luft)}
+.schieber-kopf .lead{margin-top:0}
 @media (min-width:1024px){
-  .folge-raster{grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--spalte);align-items:start}
-  .folge-text{grid-column:1/6}
-  .folge-buehne{grid-column:6/13;position:sticky;top:calc(var(--kopfhoehe) + 28px)}
-  .schritt{padding:22px 0 24px;min-height:min(22vh,180px)}
+  .schieber-kopf{grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--spalte);align-items:end}
+  .schieber-kopf h2{grid-column:1/7}
+  .schieber-kopf .lead{grid-column:8/13;max-width:none}
 }
-.folge{margin:0}
-.folge-rahmen{position:relative;aspect-ratio:16/10;background:#fff;outline:1px solid var(--linie-stark);outline-offset:-1px;overflow:hidden}
-.folge-rahmen .platte{position:absolute;inset:0;container-type:inline-size;overflow:hidden;background:#fff;transition:clip-path 900ms var(--e-inaus)}
-/* Ohne Skript liegt die fertige Platte oben. Mit Skript schiebt sich jede Stufe von links über die vorige (Klassen s1 bis s3). */
-html.js .folge:not(.s1) .p1,html.js .folge:not(.s2) .p2,html.js .folge:not(.s3) .p3{clip-path:inset(0 0 0 100%)}
-@media (prefers-reduced-motion:reduce){.folge-rahmen .platte{transition:none}}
-/* Die Platte: eine verkleinerte Startseite, alle Maße in cqw (Prozent der Plattenbreite) */
-.pl{position:absolute;inset:0;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));grid-template-rows:auto auto auto 1fr;column-gap:1.6cqw;
-  padding:0 4.4cqw;color:#0C1A33;font-family:var(--sans);font-size:1.7cqw;line-height:1.35;text-align:left;font-weight:400}
-.pl-nav{grid-column:1/-1;display:flex;align-items:center;gap:3cqw;height:6.2cqw;font-size:1.5cqw;color:#36425B;border-bottom:.15cqw solid #D3D6DC}
-.pl-nav b{margin-right:auto;font-weight:500;color:#0C1A33}
-.pl-h{grid-column:1/-1;margin-top:4.4cqw;font-size:7.4cqw;line-height:.96;font-weight:500;letter-spacing:-.04em}
-.pl-lead{grid-column:5/10;grid-row:3;align-self:start;margin-top:3.2cqw;font-size:1.65cqw;color:#36425B}
-.pl-knoepfe{grid-column:10/13;grid-row:3;align-self:start;margin-top:3.2cqw;display:grid;gap:1cqw;font-size:1.35cqw;font-weight:500;justify-items:end}
-.pl-knoepfe span{white-space:nowrap}
-.pl-k1{background:#0C1A33;color:#F4F4F1;padding:1.1cqw 1.8cqw}
-.pl-k2{text-decoration:underline;text-underline-offset:.3em;text-decoration-color:#8790A4;padding:.6cqw 0}
-.pl-werke{grid-column:1/-1;grid-row:4;align-self:end;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:1.6cqw;margin:3.4cqw -4.4cqw 0;padding:3.4cqw 4.4cqw 0;height:17cqw;background:#0C1A33;color:#EEF1F8;font-size:1.5cqw;overflow:hidden}
-.pl-w{display:none}
-.pk-fertig .pl-w1{display:block;grid-column:1/-1;height:20cqw;background:url(../assets/img/werk-nickmonu-d-720.webp) top/cover;outline:.15cqw solid #253658;color:transparent}
-.pk-fertig{background:#F4F4F1}
-/* Stufe Schrift: Satz fertig, keine Farbe, keine Flächen */
-.pk-schrift .pl-k1{background:none;color:#0C1A33;padding-inline:0;text-decoration:underline;text-underline-offset:.3em}
-.pk-schrift .pl-werke{background:none;color:#0C1A33;border-top:.15cqw solid #D3D6DC}
-.pk-schrift .pl-w{display:block;grid-column:auto/span 4;font-weight:500;font-size:2.1cqw;letter-spacing:-.02em}
-.pk-schrift .pl-nav{border-color:transparent}
-/* Stufe Raster: Kästen und Spalten, Text unsichtbar */
-.pk-raster .pl *{color:transparent!important;background:none!important;border-color:transparent!important;text-decoration:none!important}
-.pk-raster .pl::before{content:"";position:absolute;inset:0 4.4cqw;background-image:linear-gradient(90deg,rgb(45 85 232 / .08) calc(100% - 1.6cqw),transparent 0);background-size:calc((100% + 1.6cqw) / 12) 100%}
-.pk-raster :is(.pl-nav,.pl-h,.pl-lead,.pl-k1,.pl-k2,.pl-werke){outline:.2cqw solid #2D55E8;outline-offset:-.1cqw}
-.pk-raster .pl-werke{margin-inline:0;padding-inline:0}
-/* Stufe Inhalt: so, wie der Browser Text ohne Gestaltung zeigt */
-.pk-inhalt .pl{display:block;padding:3.4cqw 4.4cqw;font-family:"Times New Roman",Times,serif;font-size:2.2cqw;line-height:1.3;color:#000}
-.pk-inhalt .pl-nav{display:flex;gap:2cqw;height:auto;border:0;padding:0 0 2cqw;font-size:2.2cqw;color:#0000ee;text-decoration:underline}
-.pk-inhalt .pl-nav b{color:#000;font-weight:700;text-decoration:none;margin-right:0}
-.pk-inhalt .pl-h{margin-top:1cqw;font-size:4.4cqw;line-height:1.15;font-weight:700;letter-spacing:0}
-.pk-inhalt .pl-h br{display:none}
-.pk-inhalt .pl-lead{margin-top:2cqw;font-size:2.2cqw;color:#000}
-.pk-inhalt .pl-knoepfe{display:flex;gap:2cqw;margin-top:2cqw;font-size:2.2cqw;font-weight:400}
-.pk-inhalt :is(.pl-k1,.pl-k2){background:none;color:#0000ee;padding:0;text-decoration:underline;text-decoration-color:#0000ee}
-.pk-inhalt .pl-werke{display:block;height:auto;margin:2.4cqw 0 0;padding:0;background:none;color:#000;font-size:2.2cqw}
-.pk-inhalt .pl-w{display:list-item;list-style:disc;margin-left:3cqw;color:#0000ee;text-decoration:underline}
+.schieber{--x:50%;margin:0;position:relative}
+.sch-flaeche{position:relative;overflow:hidden;background:#fff;outline:1px solid var(--linie-stark);outline-offset:-1px;
+  touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:ew-resize;-webkit-tap-highlight-color:transparent}
+.sch-bild img{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:top;pointer-events:none}
+@media (min-width:768px){.sch-bild img{aspect-ratio:16/10}}
+.sch-roh{position:absolute;inset:0;clip-path:inset(0 calc(100% - var(--x)) 0 0)}
+.sch-linie{position:absolute;top:0;bottom:0;left:var(--x);width:2px;margin-left:-1px;background:#2D55E8;pointer-events:none}
+.sch-griff{position:absolute;left:50%;top:50%;width:44px;height:44px;margin:-22px 0 0 -22px;background:#2D55E8;
+  box-shadow:0 1px 2px rgb(12 26 51 / .25),0 6px 18px rgb(12 26 51 / .18);transition:transform 260ms var(--e-aus)}
+.sch-griff::before,.sch-griff::after{content:"";position:absolute;top:50%;width:0;height:0;margin-top:-5px;border:5px solid transparent}
+.sch-griff::before{left:9px;border-right:6px solid #fff;border-left:0}
+.sch-griff::after{right:9px;border-left:6px solid #fff;border-right:0}
+.schieber.zieht .sch-griff{transform:scale(.9)}
+@media (hover:hover){.sch-flaeche:hover .sch-griff{transform:scale(1.06)}.schieber.zieht .sch-griff{transform:scale(.9)}}
+.schieber:has(.sch-regler:focus-visible) .sch-griff{outline:2px solid var(--tinte);outline-offset:3px}
+.sch-marke{position:absolute;bottom:14px;font-size:var(--t-klein);line-height:1;padding:8px 10px 7px;background:#0C1A33;color:#F4F4F1;white-space:nowrap}
+.sch-m-roh{left:14px}
+.sch-m-fertig{right:14px}
+.sch-regler{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip-path:inset(50%);border:0;opacity:0}
+.schieber.gleitet{transition:--x 1500ms var(--e-aus)}
+@media (min-width:1024px){.sch-marke{bottom:20px}.sch-m-roh{left:20px}.sch-m-fertig{right:20px}}
+
+.schieber-schritte{display:grid;gap:0 var(--spalte);margin-top:28px}
+.schieber-schritte li{padding:16px 0 18px;border-top:1px solid var(--linie)}
+.schieber-schritte h3{font-size:var(--t-m);letter-spacing:-.02em;line-height:1.2;margin-bottom:6px}
+.schieber-schritte p{color:var(--tinte-2);font-size:15px;line-height:1.5}
+@media (min-width:640px){.schieber-schritte{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (min-width:1024px){.schieber-schritte{grid-template-columns:repeat(4,minmax(0,1fr));margin-top:32px}.schieber-schritte li{border-top-color:var(--tinte)}}
 
 /* --- Pakete (Datenblatt) -------------------------------------------------------------------------------------- */
 .datenblatt{width:100%;border-collapse:collapse;text-align:left}
@@ -601,7 +576,7 @@ html.intro:not(.frei):not(.intro-aus) :is(.kopf,main,.fuss){visibility:hidden}
 
 /* --- Zeiger: ein Zeichenkreuz. Über Links ein Auswahlrahmen, über den Arbeiten ein Etikett. Nur feine Zeigegeräte. */
 @media (pointer:fine){
-  html.zeiger,html.zeiger :is(a,button,summary,label,.werk-bild){cursor:none}
+  html.zeiger,html.zeiger :is(a,button,summary,label,.werk-bild,.sch-flaeche){cursor:none}
   html.zeiger :is(input,textarea,select,iframe){cursor:auto}
   .zeiger-el{position:fixed;left:0;top:0;z-index:300;pointer-events:none;color:var(--tinte);will-change:transform;transition:opacity 160ms}
   .zeiger-el.aus{opacity:0}

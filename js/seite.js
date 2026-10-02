@@ -124,13 +124,13 @@ function messung(){
   var SEL=['main h2.t-l','main h2.t-xl','main .statement','.werk-bild','.werk-info','.werke-mehr',
     '.sek:not(.sek-hero):not(.sek-kopfseite) .lead','.datenblatt tbody tr','.pakete-fuss','.schiene li','.karte','.faq-liste','.betreuung-liste li',
     '.prinzipien li','.text-spalte > p','.ueber-text','.kontakt-direkt','.kontakt-rechts','.tab-wrap','.farbreihe li','.vorher-nachher','.werte',
-    '.fenster','.drin-liste li','.code','.hilft-liste','.direkt','.zahlung','.einfuehrung','.schritte'].join(',');
+    '.fenster','.drin-liste li','.code','.hilft-liste','.direkt','.zahlung','.einfuehrung','.schieber-schritte li'].join(',');
   var io=new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting)return;io.unobserve(e.target);var t=e.target;
     requestAnimationFrame(function(){t.classList.add('da')})})},{rootMargin:'0px 0px -8% 0px',threshold:0});
   START.warte(function(){
     var h=innerHeight;
     $$(SEL).forEach(function(e){
-      if(e.closest('.sek-hero,.sek-kopfseite,.folge-buehne'))return;
+      if(e.closest('.sek-hero,.sek-kopfseite'))return;
       if(e.getBoundingClientRect().top<h*.98)return;
       var p=e.parentNode,geschw=Array.prototype.filter.call(p.children,function(k){return k.matches(SEL)}),i=geschw.indexOf(e);
       e.style.setProperty('--v',Math.min(i,5)*70+'ms');
@@ -139,20 +139,34 @@ function messung(){
   });
 })();
 
-/* Wie eine Seite entsteht: der Schritt in der Mitte des Fensters bestimmt, welche Stufe im Rahmen liegt */
+/* Derselbe Text: Vorher/Nachher-Schieber. Ziehen mit Maus oder Finger (senkrecht scrollt die Seite weiter),
+   Pfeiltasten über den Regler. Beim ersten Hinsehen zeigt die Fläche kurz nur die Rohfassung, dann gleitet die Linie zur Mitte. */
 (function(){
-  var f=$('[data-folge]'),schr=$$('.schritt');if(!f||!schr.length)return;
-  var raster=f.closest('.folge-raster');if(raster)raster.classList.add('folge-an');
-  function setze(i){
-    for(var k=1;k<=3;k++)f.classList.toggle('s'+k,k<=i);
-    schr.forEach(function(s,j){s.classList.toggle('ist',j===i)});
-  }
-  setze(0);
-  if(!('IntersectionObserver' in window)){setze(3);return}
-  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){var i=+e.target.getAttribute('data-schritt');setze(i);if(i>0)tick(6)}})},{rootMargin:'-46% 0px -46% 0px',threshold:0});
-  schr.forEach(function(s){io.observe(s)});
-  /* Klick auf einen Schritt zeigt seine Stufe */
-  schr.forEach(function(s,i){s.addEventListener('click',function(){setze(i)})});
+  var s=$('[data-schieber]');if(!s)return;
+  var f=$('.sch-flaeche',s),r=$('.sch-regler',s),zieht=false,beruehrt=false;
+  function setze(p){p=Math.max(0,Math.min(100,p));s.style.setProperty('--x',p+'%');r.value=Math.round(p)}
+  function von(e){var b=f.getBoundingClientRect();return (e.clientX-b.left)/b.width*100}
+  function halt(){beruehrt=true;s.classList.remove('gleitet')}
+  f.addEventListener('pointerdown',function(e){
+    if(e.button>0)return;halt();zieht=true;s.classList.add('zieht');
+    if(e.pointerType==='mouse'){setze(von(e));e.preventDefault()}
+    try{f.setPointerCapture(e.pointerId)}catch(_){}
+  });
+  f.addEventListener('pointermove',function(e){if(zieht)setze(von(e))});
+  function los(){zieht=false;s.classList.remove('zieht')}
+  f.addEventListener('pointerup',los);f.addEventListener('pointercancel',los);f.addEventListener('lostpointercapture',los);
+  r.addEventListener('input',function(){halt();setze(+r.value)});
+  if(red||!('IntersectionObserver' in window)||!(window.CSS&&'registerProperty' in CSS))return;
+  START.warte(function(){
+    var b=f.getBoundingClientRect();if(b.top<innerHeight*.9)return;
+    setze(100);
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){
+      if(!e.isIntersecting)return;io.disconnect();if(beruehrt)return;
+      setTimeout(function(){if(beruehrt)return;s.classList.add('gleitet');requestAnimationFrame(function(){setze(50)});
+        setTimeout(function(){s.classList.remove('gleitet')},1600)},250);
+    })},{threshold:.45});
+    io.observe(f);
+  });
 })();
 
 /* Schaufenster: die Arbeiten laufen live in einem Fenster. Am Desktop wird die Seite in voller Breite (1440 px)
@@ -215,7 +229,7 @@ function messung(){
     z.classList.toggle('aus',!an);
     z.classList.toggle('dunkel',!!el.closest(BUEHNE));
     var a=el.closest('a,button,summary,label,.schritt');
-    var etikett=el.closest('.werk-bild')?(EN?'View':'Ansehen'):(a&&a.getAttribute('data-zeiger'))||'';
+    var etikett=el.closest('.werk-bild')?(EN?'View':'Ansehen'):el.closest('.sch-flaeche')?(EN?'Drag':'Ziehen'):(a&&a.getAttribute('data-zeiger'))||'';
     z.classList.toggle('griff',!!a);
     t.textContent=etikett;z.classList.toggle('mit-text',!!etikett);
   });
