@@ -1,4 +1,4 @@
-/* simonmonu.at · Seitenskript. Nichts hiervon ist nötig, damit die Seite funktioniert. */
+/* simonmonu.at · Seitenskript, Fassung 15. Nichts hiervon ist nötig, damit die Seite funktioniert. */
 (function(){
 'use strict';
 var d=document,root=d.documentElement,body=d.body;
@@ -9,17 +9,17 @@ var BASIS=(function(){var s=d.currentScript&&d.currentScript.src;return s?s.repl
 var DATEI=location.protocol==='file:';
 function ort(p){var u=BASIS+p;return DATEI?u.replace(/\/(\?|#|$)/,'/index.html$1'):u}
 var red=matchMedia('(prefers-reduced-motion: reduce)').matches;
-function tick(n){try{if(!red&&navigator.vibrate&&matchMedia('(pointer: coarse)').matches)navigator.vibrate(n||8)}catch(e){}}
 var fein=matchMedia('(pointer: fine)').matches;
+function tick(n){try{if(!red&&navigator.vibrate&&matchMedia('(pointer: coarse)').matches)navigator.vibrate(n||8)}catch(e){}}
 function $(s,c){return (c||d).querySelector(s)}
 function $$(s,c){return Array.prototype.slice.call((c||d).querySelectorAll(s))}
-function sg(k){try{return sessionStorage.getItem(k)}catch(e){return null}}
 function ss(k,v){try{v==null?sessionStorage.removeItem(k):sessionStorage.setItem(k,v)}catch(e){}}
 function zahl(n,st){var s=n.toFixed(st).split('.');s[0]=s[0].replace(/\B(?=(\d{3})+(?!\d))/g,EN?',':'.');return s.join(EN?'.':',')}
-/* Zählt eine Zahl in einem Text hoch (0 bis Zielwert), ohne Einheit oder Format zu verändern */
-function tween(dauer,f){var t0=performance.now();(function s(n){var k=Math.min(1,(n-t0)/dauer),e=1-Math.pow(1-k,4);f(e);if(k<1)requestAnimationFrame(s)})(t0)}
-/* Start: wartet auf das Ende der Stückliste (falls sie läuft) und auf die Schriften, damit die Zeilen stimmen */
-var START=(function(){var fs=[],ok=false;return{warte:function(f){ok?f():fs.push(f)},los:function(){if(ok)return;ok=true;var w=d.fonts&&d.fonts.ready?Promise.race([d.fonts.ready,new Promise(function(r){setTimeout(r,500)})]):Promise.resolve();w.then(function(){fs.forEach(function(f){f()})})}}})();
+var BUEHNE='.sek-werke,.sek-kontakt,.sek-schaufenster,.sek-case-bild,.sek-demo,.sek-anfrage,.fuss';
+
+/* Start: wartet auf das Ende der Startansicht (falls sie läuft) und auf die Schriften, damit die Zeilen stimmen */
+var START=(function(){var fs=[],ok=false;return{warte:function(f){ok?f():fs.push(f)},los:function(){if(ok)return;ok=true;
+  var w=d.fonts&&d.fonts.ready?Promise.race([d.fonts.ready,new Promise(function(r){setTimeout(r,500)})]):Promise.resolve();w.then(function(){fs.forEach(function(f){f()})})}}})();
 
 /* Per Doppelklick geöffnet (file://): Links auf Ordner zeigen sonst eine Dateiliste statt der Seite */
 if(DATEI)$$('a[href]').forEach(function(a){var h=a.getAttribute('href');if(/^(https?:|mailto:|tel:|#)/.test(h))return;a.setAttribute('href',h.replace(/(^|\/)(\?|#|$)/,function(m,s,r){return (s||'')+'index.html'+r}).replace(/^\.\/index\.html/,'index.html'))});
@@ -40,76 +40,119 @@ if(DATEI)$$('a[href]').forEach(function(a){var h=a.getAttribute('href');if(/^(ht
   zeige();
 })();
 
-/* Messung der eigenen Seite (nur auf diesem Gerät) */
+/* Messung der eigenen Seite (nur auf diesem Gerät, nichts wird gesendet) */
 function messung(){
   var r=performance.getEntriesByType('resource').filter(function(e){return e.name.indexOf(location.origin)===0});
   var nav=performance.getEntriesByType('navigation')[0];
   var liste=[];
   /* Gewicht = komprimierte Dateigröße (encodedBodySize), damit Cache-Treffer nicht als 0 KB zählen; c = kam aus dem Cache */
   function gr(e){return e.encodedBodySize||e.transferSize||0}
-  if(nav)liste.push({n:location.pathname==='/'?'index.html':location.pathname.replace(/^\//,''),b:gr(nav),t:nav.responseEnd,c:!nav.transferSize&&nav.encodedBodySize>0});
-  r.forEach(function(e){liste.push({n:e.name.replace(location.origin+'/','').replace(/\?.*/,''),b:gr(e),t:e.responseEnd,c:!e.transferSize&&e.encodedBodySize>0})});
+  if(nav)liste.push({n:location.pathname==='/'?'index.html':location.pathname.replace(/^\//,''),b:gr(nav),c:!nav.transferSize&&nav.encodedBodySize>0});
+  var schon={};
+  r.forEach(function(e){var n=e.name.replace(location.origin+'/','').replace(/\?.*/,'');if(schon[n])return;schon[n]=1;liste.push({n:n,b:gr(e),c:!e.transferSize&&e.encodedBodySize>0})});
   var summe=liste.reduce(function(a,e){return a+e.b},0);
-  var ende=nav?(nav.loadEventEnd||nav.domContentLoadedEventEnd||performance.now()):performance.now();
-  return {liste:liste,n:liste.length,kb:summe/1000,s:ende/1000};
+  return {liste:liste,n:liste.length,kb:summe/1000};
 }
 
-/* Spur-Zeile: echte Werte, live gemessen */
-function spur(){
-  if(DATEI)return;   /* file:// liefert keine Messdaten: die beim Bauen berechneten Werte bleiben stehen */
-  var m=messung();
-  var sp=$('[data-spur]');
-  function text(k){return EN?'This page: '+Math.round(m.n*k)+(m.n===1?' file, ':' files, ')+zahl(m.kb*k,0)+'\u00a0KB, loaded on your device in '+zahl(m.s*k,2)+'\u00a0s':'Diese Seite: '+Math.round(m.n*k)+(m.n===1?' Datei, ':' Dateien, ')+zahl(m.kb*k,0)+'\u00a0KB, bei Ihnen in '+zahl(m.s*k,2)+'\u00a0s geladen'}
-  if(sp&&m.n>0){if(red)sp.textContent=text(1);else START.warte(function(){tween(900,function(k){sp.textContent=text(k)})})}
-  var f=$('[data-spur-fuss]');
-  if(f&&m.n>0)f.textContent=(EN?'This page: '+m.n+' files, ':'Diese Seite: '+m.n+' Dateien, ')+zahl(m.kb,0)+' KB';
-  if(m.n>0){$$('[data-live-n]').forEach(function(e){e.textContent=m.n});$$('[data-live-kb]').forEach(function(e){e.textContent=zahl(m.kb,0)})}
-}
-if(d.readyState==='complete')setTimeout(spur,0);else addEventListener('load',function(){setTimeout(spur,0)});
-
-/* Startansicht "Stückliste": zeigt die echten Dateien dieser Seite, während sie ankommen */
+/* Startansicht „Stückliste“: die echten Dateien dieser Seite, während sie ankommen. Danach hebt sie sich wie ein Vorhang. */
 (function(){
   var el=$('[data-stueckliste]');
   if(!root.classList.contains('intro')||!el){if(el)el.remove();START.los();return}
-  var ul=$('[data-st-liste]',el),sum=$('[data-st-summe]',el);
-  var start=performance.now(),min=700,max=1800,fertig=false,gezeigt=0;
+  var ul=$('[data-st-liste]',el),bal=$('[data-st-balken]',el),sum=$('[data-st-summe]',el);
+  var t0=performance.now(),min=700,max=1800,fertig=false,gezeigt=0,p=0;
+  var ziel={loading:.3,interactive:.7,complete:1};
   function zeile(e){
-    var li=d.createElement('li');li.className='mono';
-    [e.n,e.c?(EN?'from cache':'aus dem Cache'):zahl(e.b/1000,1)+' KB',zahl(e.t/1000,2)+' s'].forEach(function(t){var s=d.createElement('span');s.textContent=t;li.appendChild(s)});
+    var li=d.createElement('li');
+    [e.n,e.c?(EN?'from cache':'aus dem Cache'):zahl(e.b/1000,1)+' KB'].forEach(function(t){var s=d.createElement('span');s.textContent=t;li.appendChild(s)});
     ul.appendChild(li);
   }
-  function tick(){
+  function schritt(){
     if(fertig)return;
     var m=messung();
-    while(gezeigt<m.liste.length&&gezeigt<9){zeile(m.liste[gezeigt]);gezeigt++}
-    sum.textContent=m.n+(EN?' files, ':' Dateien, ')+zahl(m.kb,0)+'\u00a0KB';
-    var t=performance.now()-start;
-    if(t>=max||(t>=min&&d.readyState==='complete'))ende();else requestAnimationFrame(tick);
+    while(gezeigt<m.liste.length&&gezeigt<8){zeile(m.liste[gezeigt]);gezeigt++}
+    var t=performance.now()-t0,z=ziel[d.readyState]||.3;
+    p+=(Math.min(z,Math.max(t/min,.1))-p)*.18;bal.style.transform='scaleX('+p.toFixed(3)+')';
+    if(t>=max||(t>=min&&d.readyState==='complete'))ende(m);else requestAnimationFrame(schritt);
   }
-  function ende(){
+  function ende(m){
     if(fertig)return;fertig=true;ss('sm-intro','1');
-    removeEventListener('keydown',ende);removeEventListener('pointerdown',ende);removeEventListener('wheel',ende);removeEventListener('touchstart',ende);
-    el.classList.add('weg');
-    setTimeout(function(){root.classList.add('intro-aus');START.los();root.classList.remove('intro');el.remove()},220);
+    ['keydown','pointerdown','wheel','touchstart'].forEach(function(n){removeEventListener(n,abbruch)});
+    m=m||messung();bal.style.transform='scaleX(1)';
+    sum.textContent=m.n+(EN?' files, ':' Dateien, ')+zahl(m.kb,0)+' KB';
+    setTimeout(function(){
+      root.classList.add('intro-aus');el.classList.add('weg');START.los();
+      setTimeout(function(){root.classList.remove('intro');el.remove()},800);
+    },red?0:260);
   }
-  addEventListener('keydown',ende);addEventListener('pointerdown',ende);addEventListener('wheel',ende,{passive:true});addEventListener('touchstart',ende,{passive:true});
-  requestAnimationFrame(tick);
+  function abbruch(){ende()}
+  ['keydown','pointerdown'].forEach(function(n){addEventListener(n,abbruch)});
+  ['wheel','touchstart'].forEach(function(n){addEventListener(n,abbruch,{passive:true})});
+  requestAnimationFrame(schritt);
 })();
 
-/* Platzhalter -> Bild */
-$$('picture.bild[data-bild]').forEach(function(p){
-  var i=$('img',p);if(!i)return;
-  function ok(){p.classList.add('geladen')}
-  if(i.complete&&i.naturalWidth)ok();else{i.addEventListener('load',ok);i.addEventListener('error',ok)}
-});
-
-/* Gestaffelte Listen */
+/* Kopfbereich der Startseite: die Überschrift steht sofort, Text und Knöpfe folgen. Darunter die Maßlinie. */
 (function(){
-  var l=$$('[data-stagger]');if(!l.length)return;
-  l.forEach(function(x){$$(':scope > *',x).forEach(function(k,i){k.style.setProperty('--i',i)})});
-  if(!('IntersectionObserver' in window)){l.forEach(function(x){x.classList.add('ein')});return}
-  var o=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('ein');o.unobserve(e.target)}})},{rootMargin:'0px 0px -10% 0px'});
-  l.forEach(function(x){o.observe(x)});
+  var kopf=$('.hero-innen');if(!kopf)return;
+  var h1=$('.hero-titel',kopf);
+  /* Maßlinie: misst die tatsächliche Breite der Überschrift (längste Zeile) */
+  function masslinie(){
+    var el=d.createElement('div');el.className='masslinie';el.setAttribute('aria-hidden','true');
+    var s=d.createElement('span');el.appendChild(s);kopf.appendChild(el);
+    function mess(){
+      var rs=[],tw=d.createTreeWalker(h1,NodeFilter.SHOW_TEXT),n;
+      while((n=tw.nextNode())){if(!n.textContent.trim())continue;var r=d.createRange();r.selectNodeContents(n);Array.prototype.push.apply(rs,Array.prototype.slice.call(r.getClientRects()).filter(function(x){return x.width>2}))}
+      if(!rs.length)return;
+      var l=Math.min.apply(null,rs.map(function(x){return x.left})),re=Math.max.apply(null,rs.map(function(x){return x.right})),un=Math.max.apply(null,rs.map(function(x){return x.bottom}));
+      var b=kopf.getBoundingClientRect();
+      el.style.left=(l-b.left)+'px';el.style.width=(re-l)+'px';el.style.top=(un-b.top+12)+'px';
+      s.textContent=zahl(re-l,0)+' px';
+    }
+    mess();var t;addEventListener('resize',function(){clearTimeout(t);t=setTimeout(mess,120)});
+    if(d.fonts&&d.fonts.ready)d.fonts.ready.then(mess);
+    return el;
+  }
+  var ml=h1&&fein?masslinie():null;
+  START.warte(function(){
+    $$(':scope > .hero-ort, :scope > .hero-text',kopf).forEach(function(e,i){e.style.setProperty('--v',(120+i*110)+'ms');requestAnimationFrame(function(){requestAnimationFrame(function(){e.classList.add('an')})})});
+    if(ml)setTimeout(function(){ml.classList.add('an')},red?0:420);
+  });
+})();
+
+/* Beim Hinscrollen: Inhalte unterhalb des ersten Bildschirms erscheinen einmal. Was schon zu sehen ist, bleibt unberührt. */
+(function(){
+  if(red||!('IntersectionObserver' in window))return;
+  var SEL=['main h2.t-l','main h2.t-xl','main .statement','.werk-bild','.werk-info','.werke-mehr',
+    '.sek:not(.sek-hero):not(.sek-kopfseite) .lead','.datenblatt tbody tr','.pakete-fuss','.schiene li','.karte','.faq-liste','.betreuung-liste li',
+    '.prinzipien li','.text-spalte > p','.ueber-text','.kontakt-direkt','.kontakt-rechts','.tab-wrap','.farbreihe li','.vorher-nachher','.werte',
+    '.fenster','.drin-liste li','.code','.hilft-liste','.direkt','.zahlung','.einfuehrung','.schritte'].join(',');
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting)return;io.unobserve(e.target);var t=e.target;
+    requestAnimationFrame(function(){t.classList.add('da')})})},{rootMargin:'0px 0px -8% 0px',threshold:0});
+  START.warte(function(){
+    var h=innerHeight;
+    $$(SEL).forEach(function(e){
+      if(e.closest('.sek-hero,.sek-kopfseite,.folge-buehne'))return;
+      if(e.getBoundingClientRect().top<h*.98)return;
+      var p=e.parentNode,geschw=Array.prototype.filter.call(p.children,function(k){return k.matches(SEL)}),i=geschw.indexOf(e);
+      e.style.setProperty('--v',Math.min(i,5)*70+'ms');
+      e.classList.add('auf');io.observe(e);
+    });
+  });
+})();
+
+/* Wie eine Seite entsteht: der Schritt in der Mitte des Fensters bestimmt, welche Stufe im Rahmen liegt */
+(function(){
+  var f=$('[data-folge]'),schr=$$('.schritt');if(!f||!schr.length)return;
+  var raster=f.closest('.folge-raster');if(raster)raster.classList.add('folge-an');
+  function setze(i){
+    for(var k=1;k<=3;k++)f.classList.toggle('s'+k,k<=i);
+    schr.forEach(function(s,j){s.classList.toggle('ist',j===i)});
+  }
+  setze(0);
+  if(!('IntersectionObserver' in window)){setze(3);return}
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){var i=+e.target.getAttribute('data-schritt');setze(i);if(i>0)tick(6)}})},{rootMargin:'-46% 0px -46% 0px',threshold:0});
+  schr.forEach(function(s){io.observe(s)});
+  /* Klick auf einen Schritt zeigt seine Stufe */
+  schr.forEach(function(s,i){s.addEventListener('click',function(){setze(i)})});
 })();
 
 /* Schaufenster: die Arbeiten laufen live in einem Fenster. Am Desktop wird die Seite in voller Breite (1440 px)
@@ -133,11 +176,11 @@ $$('picture.bild[data-bild]').forEach(function(p){
     reiter.forEach(function(r,i){
       r.addEventListener('click',function(){waehle(i)});
       r.addEventListener('keydown',function(e){var n=null,l=reiter.length;
-        if(e.key==='ArrowRight')n=(i+1)%l;else if(e.key==='ArrowLeft')n=(i-1+l)%l;else if(e.key==='Home')n=0;else if(e.key==='End')n=l-1;
+        if(e.key==='ArrowRight'||e.key==='ArrowDown')n=(i+1)%l;else if(e.key==='ArrowLeft'||e.key==='ArrowUp')n=(i-1+l)%l;else if(e.key==='Home')n=0;else if(e.key==='End')n=l-1;
         if(n!==null){e.preventDefault();waehle(n,true)}});
     });
     function aktiv(){for(var i=0;i<tafeln.length;i++)if(!tafeln[i].hidden)return tafeln[i];return tafeln[0]}
-    /* erst laden, wenn das Fenster in die Nähe kommt: die Startseite bleibt leicht */
+    /* erst laden, wenn das Fenster in die Nähe kommt: die Seite bleibt leicht */
     if('IntersectionObserver' in window){var io=new IntersectionObserver(function(es){if(es[0].isIntersecting){io.disconnect();sichtbar=true;lade(aktiv())}},{rootMargin:'500px 0px'});io.observe(fe)}
     else{sichtbar=true;lade(aktiv())}
     var rt;addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){passe(aktiv())},100)});
@@ -148,146 +191,48 @@ $$('picture.bild[data-bild]').forEach(function(p){
       fe.addEventListener('touchend',function(e){if(!ok)return;ok=false;var t=e.changedTouches[0],dx=t.clientX-x0,dy=t.clientY-y0;
         if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.5){var i=cur(),n=dx<0?i+1:i-1;if(n>=0&&n<tafeln.length){waehle(n);tick(10);var r=reiter[n];if(r&&r.scrollIntoView&&!red)r.scrollIntoView({block:'nearest',behavior:'smooth'})}}},{passive:true});
     })();
-    /* Touch: erst nach Tippen bedienbar, sonst hält das Fenster beim Scrollen der Seite den Finger fest */
+    /* Erst nach Tippen bedienbar, sonst hält das Fenster beim Scrollen der Seite den Finger fest */
     $$('[data-tippen]',fe).forEach(function(b){b.addEventListener('click',function(){b.closest('[data-fenster-bild]').classList.add('aktiv');b.hidden=true})});
   });
 })();
 
-/* Bewegung: Start, Überschriften Zeile für Zeile, Bilder, Linien, Zahlen. Alles einmal, nichts bei reduzierter Bewegung. */
-(function(){
-  if(red)return;
-  if(!('IntersectionObserver' in window)){root.classList.add('frei');return}
-  function teile(h){
-    if(h.classList.contains('geteilt'))return !!h.__orig;
-    var kinder=Array.prototype.slice.call(h.childNodes);
-    if(kinder.some(function(n){return n.nodeType===1&&n.tagName!=='BR'})){h.classList.add('geteilt');return false}
-    h.__orig=h.innerHTML;h.innerHTML='';
-    var w=[];
-    kinder.forEach(function(n){
-      if(n.nodeType===3)n.textContent.split(/\s+/).forEach(function(x){if(!x)return;var s=d.createElement('span');s.textContent=x;h.appendChild(s);h.appendChild(d.createTextNode(' '));w.push(s)});
-      else h.appendChild(d.createElement('br'));
-    });
-    var reihen=[],top=null;
-    w.forEach(function(s){var o=s.offsetTop;if(top===null||o>top+2){reihen.push([]);top=o}reihen[reihen.length-1].push(s.textContent)});
-    h.innerHTML='';
-    reihen.forEach(function(r,i){var a=d.createElement('span');a.className='zeile';var b=d.createElement('span');b.className='zeile-in';b.style.setProperty('--z',i);b.textContent=r.join(' ');a.appendChild(b);h.appendChild(a)});
-    h.__n=reihen.length;h.classList.add('geteilt');return true;
-  }
-  function zeige(h,v){
-    var geteilt=teile(h);
-    if(v)h.style.setProperty('--v',v+'ms');
-    requestAnimationFrame(function(){requestAnimationFrame(function(){h.classList.add('an')})});
-    if(geteilt)offen.push(h);
-  }
-  /* Nach dem Auftritt bleiben die Zeilen stehen (ein Austausch des Texts würde als neuer größter Inhalt zählen und das
-     gemessene LCP verschlechtern). Erst wenn sich die Fensterbreite ändert, kommt der ursprüngliche Text zurück. */
-  var offen=[],rt;
-  addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){offen.forEach(function(h){if(h.__orig!=null&&h.classList.contains('an')){h.innerHTML=h.__orig;h.__orig=null}});offen=offen.filter(function(h){return h.__orig!=null})},150)});
-  function auf(e,v){if(v!=null)e.style.setProperty('--v',v+'ms');requestAnimationFrame(function(){requestAnimationFrame(function(){e.classList.add('an')})})}
-  function zaehle(dd){
-    var m=/^(\d+)(?:[,.](\d+))?(.*)$/.exec(dd.textContent.trim());if(!m)return;
-    var ziel=parseFloat(m[1]+'.'+(m[2]||'0')),st=m[2]?m[2].length:0,rest=m[3];
-    tween(1200,function(k){dd.textContent=zahl(ziel*k,st)+rest});
-  }
-  /* Maßlinie unter der Startüberschrift: misst die tatsächliche Zeilenbreite und Schriftgröße */
-  function masslinie(h1){
-    var box=h1.parentElement,el=d.createElement('div');el.className='masslinie';el.setAttribute('aria-hidden','true');
-    var s=d.createElement('span');el.appendChild(s);box.appendChild(el);
-    function mess(){
-      var rs=[],tw=d.createTreeWalker(h1,NodeFilter.SHOW_TEXT),n;
-      while((n=tw.nextNode())){if(!n.textContent.trim())continue;var r=d.createRange();r.selectNodeContents(n);Array.prototype.push.apply(rs,Array.prototype.slice.call(r.getClientRects()).filter(function(x){return x.width>2}))}
-      if(!rs.length)return;var l=Math.min.apply(null,rs.map(function(x){return x.left})),re=Math.max.apply(null,rs.map(function(x){return x.right}));
-      var b=box.getBoundingClientRect(),hb=h1.getBoundingClientRect();
-      el.style.left=(l-b.left)+'px';el.style.width=(re-l)+'px';el.style.top=(hb.bottom-b.top+5)+'px';
-      s.textContent=zahl(re-l,0)+(EN?' px wide, type ':' px breit, Schrift ')+zahl(parseFloat(getComputedStyle(h1).fontSize),0)+' px';
-    }
-    mess();var t;addEventListener('resize',function(){clearTimeout(t);t=setTimeout(mess,120)});
-    if(d.fonts&&d.fonts.ready)d.fonts.ready.then(mess);
-    return el;
-  }
-  /* Start: Kopfbereich der Seite */
-  START.warte(function(){
-    var kopf=$('.hero-innen')||$('.sek-kopfseite .wrap');if(!kopf)return;
-    var h1=$('h1',kopf),rest=$$(':scope > :not(h1):not(.lead)',kopf);
-    if(h1)zeige(h1,0);
-    rest.forEach(function(e,i){e.classList.add('bw-auf');auf(e,e.classList.contains('spur')?0:80+i*100)});
-    if(h1&&kopf.classList.contains('hero-innen')){var ml=masslinie(h1);setTimeout(function(){ml.classList.add('an')},900)}
-  });
-  /* Beim Scrollen */
-  var io=new IntersectionObserver(function(es){es.forEach(function(e){
-    if(!e.isIntersecting)return;io.unobserve(e.target);var t=e.target,art=t.__art;
-    if(art==='zeilen')zeige(t,0);
-    else if(art==='linie')t.classList.add('linie-an');
-    else{auf(t);if(t.classList.contains('werte'))$$('dd.mono',t).forEach(zaehle)}
-  })},{rootMargin:'0px 0px -12% 0px',threshold:0});
-  /* Fließtext, der schon beim Laden im Bild ist, steht sofort da: sonst misst der Browser den größten Inhalt erst nach der Einblendung */
-  function beob(sel,art,kl,v){$$(sel).forEach(function(e,i){if(e.__art||e.classList.contains('geteilt'))return;
-    if(art==='text'&&e.getBoundingClientRect().top<innerHeight){e.__art=art;e.style.transition='none';e.classList.add('an');return}
-    e.__art=art;if(kl)e.classList.add(kl);if(v!=null)e.style.setProperty('--v',(typeof v==='function'?v(e,i):v)+'ms');io.observe(e)})}
-  START.warte(function(){
-    beob('main :is(h1,h2):is(.t-display,.t-xl,.t-l)','zeilen');
-    beob('.sek+.sek','linie');
-    beob('.fenster-rahmen,.vorher-nachher figure','bild','bw-bild');
-    beob('.arbeit-zeile,.reiter-liste,.fenster-info','auf','bw-auf',120);
-    beob('.sek:not(.sek-hero):not(.sek-kopfseite):not(.rechtstext) .lead,.text-spalte > p,.zahlung,.einfuehrung,.preis-hinweis,.ueber-text,.problem-text > p,.beleg-text','text','bw-text',180);
-    beob('.alle,.sek:not(.sek-hero):not(.sek-kopfseite) .knoepfe,.tab-wrap,.farbreihe li,.formular,.direkt,.faq-liste,.betreuung-liste li,.prinzipien li,.code,.hilft-liste,.werte,.ueber-link','auf','bw-auf',function(e,i){return 120+(e.matches('li')?Array.prototype.indexOf.call(e.parentNode.children,e)*80:0)});
-  });
-})();
-
-/* Seitenwechsel dort, wo der Browser keine View Transitions kann (Firefox, Safari, per Doppelklick): kurz ausblenden, dann weiter */
-(function(){
-  if(red||(!DATEI&&('PageRevealEvent' in window)))return;
-  d.addEventListener('click',function(e){
-    if(e.defaultPrevented||e.button||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;
-    var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.target||a.hasAttribute('download'))return;
-    var h=a.getAttribute('href');if(/^(#|mailto:|tel:|javascript:)/.test(h))return;
-    var u=new URL(a.href,location.href);
-    if(DATEI?u.protocol!=='file:':u.origin!==location.origin)return;
-    if(u.pathname===location.pathname&&u.hash)return;
-    e.preventDefault();root.classList.add('geht');setTimeout(function(){location.href=a.href},190);
-  });
-  addEventListener('pageshow',function(){root.classList.remove('geht')});
-})();
-
-/* Zeiger: ein Kreuz, daneben die Position in Pixeln. Auf den dunklen Flächen hell. */
+/* Zeiger: ein Zeichenkreuz. Über Links und Knöpfen ein Auswahlrahmen, über den Arbeiten ein Etikett, auf der Bühne hell.
+   Der eigene Zeiger ersetzt den Pfeil erst, wenn er sich bewegt hat; über Eingabefeldern und Demos bleibt der normale. */
 (function(){
   if(!fein||red)return;
-  var z=d.createElement('div');z.className='zeiger-el';z.setAttribute('aria-hidden','true');
-  var t=d.createElement('span');t.className='zeiger-text';var m=d.createElement('span');m.className='zeiger-mass mono';
-  z.appendChild(t);z.appendChild(m);body.appendChild(z);root.classList.add('zeiger');
-  var x=-50,y=-50,frame=0,BUEHNE='.sek-arbeiten,.sek-kontakt,.sek-schaufenster,.sek-case-bild,.sek-demo,.sek-anfrage';
-  function pos(){frame=0;z.style.transform='translate('+x+'px,'+y+'px)';m.textContent=Math.round(x)+' \u00b7 '+Math.round(y)}
-  addEventListener('pointermove',function(e){x=e.clientX;y=e.clientY;if(!frame)frame=requestAnimationFrame(pos)},{passive:true});
+  var z=d.createElement('div');z.className='zeiger-el aus';z.setAttribute('aria-hidden','true');
+  var k=d.createElement('span');k.className='zeiger-kreuz';var r=d.createElement('span');r.className='zeiger-rahmen';var t=d.createElement('span');t.className='zeiger-text';
+  z.appendChild(r);z.appendChild(k);z.appendChild(t);body.appendChild(z);
+  var x=-80,y=-80,frame=0,an=false;
+  function pos(){frame=0;z.style.transform='translate('+x+'px,'+y+'px)'}
+  addEventListener('pointermove',function(e){
+    if(e.pointerType&&e.pointerType!=='mouse')return;
+    x=e.clientX;y=e.clientY;if(!an){an=true;root.classList.add('zeiger')}if(!frame)frame=requestAnimationFrame(pos);
+  },{passive:true});
   d.addEventListener('pointerover',function(e){
-    if(e.target.tagName==='IFRAME'){z.classList.add('aus');return}z.classList.remove('aus');
-    z.classList.toggle('dunkel',!!(e.target.closest&&e.target.closest(BUEHNE)));
-    var a=e.target.closest&&e.target.closest('a,button,summary,label,select');
-    if(a){z.classList.add('griff');t.textContent=a.getAttribute('data-zeiger')||''}else{z.classList.remove('griff');t.textContent=''}
-    z.classList.toggle('mit-text',!!t.textContent);
+    var el=e.target;if(!el.closest)return;
+    if(el.closest('iframe,input,textarea,select')){z.classList.add('aus');return}
+    z.classList.toggle('aus',!an);
+    z.classList.toggle('dunkel',!!el.closest(BUEHNE));
+    var a=el.closest('a,button,summary,label,.schritt');
+    var etikett=el.closest('.werk-bild')?(EN?'View':'Ansehen'):(a&&a.getAttribute('data-zeiger'))||'';
+    z.classList.toggle('griff',!!a);
+    t.textContent=etikett;z.classList.toggle('mit-text',!!etikett);
   });
-  d.addEventListener('mouseleave',function(){z.style.transform='translate(-50px,-50px)'});
+  d.documentElement.addEventListener('mouseleave',function(){z.classList.add('aus')});
+  d.documentElement.addEventListener('mouseenter',function(){if(an)z.classList.remove('aus')});
 })();
 
-/* Schichten: beim Scrollen setzen sie sich zusammen. Der Fortschritt hängt am Scrollweg und beginnt erst, wenn der Stapel im Bild ist */
+/* Lesefortschritt (nur schmale Bildschirme, per CSS) */
 (function(){
-  var f=$('[data-schichten]');if(!f||red)return;var w=false,lade=0;
-  function z(){w=false;var y=window.pageYOffset||root.scrollTop,top=f.getBoundingClientRect().top+y,s0=Math.max(0,top-innerHeight*.9),p=Math.min(1,Math.max(0,(y-s0)/420));
-    f.style.setProperty('--auf',((1-p*p*(3-2*p))*lade).toFixed(3))}
-  function q(){if(!w){w=true;requestAnimationFrame(z)}}
-  addEventListener('scroll',q,{passive:true});addEventListener('resize',q);z();
-  /* Beim Laden liegen die vier Zustände zusammen und ziehen sich einmal auseinander */
-  START.warte(function(){tween(1700,function(k){lade=k;z()})});
-})();
-
-/* Lesefortschritt: dünne Linie am unteren Rand des Kopfs (nur schmale Bildschirme, per CSS) */
-(function(){
-  var k=$('.kopf');if(!k)return;var l=d.createElement('div');l.className='fortschritt';l.setAttribute('aria-hidden','true');body.appendChild(l);
+  var l=d.createElement('div');l.className='fortschritt';l.setAttribute('aria-hidden','true');body.appendChild(l);
   var w=false;function z(){w=false;var h=root.scrollHeight-innerHeight,p=h>0?Math.min(1,Math.max(0,(window.pageYOffset||root.scrollTop)/h)):0;l.style.transform='scaleX('+p+')'}
   function q(){if(!w){w=true;requestAnimationFrame(z)}}
   addEventListener('scroll',q,{passive:true});addEventListener('resize',q);z();
 })();
+
+/* Menü */
 $$('[data-menue]').forEach(function(m){m.addEventListener('toggle',function(){tick(8)})});
-/* Menü schließen bei Klick auf Link */
 $$('[data-menue] a').forEach(function(a){a.addEventListener('click',function(){var m=a.closest('details');if(m)m.open=false})});
 addEventListener('keydown',function(e){if(e.key==='Escape'){var m=$('[data-menue][open]');if(m)m.open=false}});
 
