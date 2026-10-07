@@ -417,6 +417,7 @@ html.js:not(.ruhig) .masslinie:not(.an)::after,html.js:not(.ruhig) .masslinie:no
 .pakete-fuss .preis-hinweis{margin-top:0}
 .sek-einf .einf-text,.empf-text{grid-column:1/-1;max-width:44em}
 @media (min-width:1024px){.sek-einf .einf-text,.empf-text{grid-column:1/9}}
+.einf-text p:not(.lead),.empf-text p:not(.lead){max-width:36em}
 .betreuung-text{grid-column:1/-1;max-width:34em}
 .betreuung-liste{grid-column:1/-1;display:grid;margin-top:22px}
 .betreuung-liste li{padding:14px 0;border-top:1px solid var(--linie);color:var(--tinte-2)}
