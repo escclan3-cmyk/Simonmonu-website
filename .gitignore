@@ -1,2 +1,5 @@
 # /arena skill run outputs (.claude/skills/arena)
 .arena/
+
+# /court skill run outputs (.claude/skills/court)
+.court/
