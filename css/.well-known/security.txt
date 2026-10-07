@@ -1,4 +1,0 @@
-Contact: mailto:office@simonmonu.at
-Expires: 2027-09-30T00:00:00.000Z
-Preferred-Languages: de, en
-Canonical: https://simonmonu.at/.well-known/security.txt
