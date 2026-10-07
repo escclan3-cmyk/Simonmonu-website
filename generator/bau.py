@@ -348,24 +348,12 @@ def manifest_icons():
                                                "display": "browser", "background_color": "#F4F4F1", "theme_color": "#0C1A33",
                                                "icons": [{"src": "/assets/icons/apple-touch-icon.png", "sizes": "180x180", "type": "image/png"}]},
                                               ensure_ascii=False, indent=1))
-    # Zeichen: eine Bemaßung (Linie mit zwei Endstrichen) auf Nachtblau, wie die Maßlinie unter der Startüberschrift
-    svg = ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="#0C1A33"/>'
-           '<path d="M14 32h36M14 22v20M50 22v20" stroke="#F4F4F1" stroke-width="4" fill="none"/></svg>')
-    schreibe("assets/icons/icon.svg", svg)
-    from PIL import ImageDraw
-    def icon(gr):
-        k = gr * 4   # vierfach zeichnen, dann verkleinern: glatte Kanten ohne Zusatzbibliothek
-        im = Image.new("RGB", (k, k), "#0C1A33")
-        d = ImageDraw.Draw(im)
-        s = k / 64
-        w = max(2, round(4 * s))
-        d.line([(14 * s, 32 * s), (50 * s, 32 * s)], fill="#F4F4F1", width=w)
-        d.line([(14 * s, 22 * s), (14 * s, 42 * s)], fill="#F4F4F1", width=w)
-        d.line([(50 * s, 22 * s), (50 * s, 42 * s)], fill="#F4F4F1", width=w)
-        return im.resize((gr, gr), Image.LANCZOS)
+    # Zeichen "S.": fertige Dateien aus generator/marke/ (Schrift dort schon in Pfade umgewandelt)
+    marke = os.path.join(G.BASIS, "marke")
+    schreibe("assets/icons/icon.svg", open(os.path.join(marke, "favicon.svg"), encoding="utf-8").read())
     os.makedirs(os.path.join(AUS, "assets", "icons"), exist_ok=True)
-    icon(180).save(os.path.join(AUS, "assets", "icons", "apple-touch-icon.png"))
-    icon(64).save(os.path.join(AUS, "favicon.ico"), sizes=[(32, 32)])
+    shutil.copyfile(os.path.join(marke, "apple-touch-icon.png"), os.path.join(AUS, "assets", "icons", "apple-touch-icon.png"))
+    shutil.copyfile(os.path.join(marke, "favicon.ico"), os.path.join(AUS, "favicon.ico"))
 
 
 def statisch():
