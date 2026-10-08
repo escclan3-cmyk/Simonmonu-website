@@ -15,19 +15,21 @@ MAIL = "office@simonmonu.at"
 
 # Stand von CSS/JS. Bei jeder Änderung an css/ oder js/ hochzählen, sonst zeigen
 # Browser bis zu einer Woche lang die alte Fassung (Cache-Regel in _headers).
-VERSION = "17"
+VERSION = "18"
 
 # --- Noch offen (bis zum Livegang eintragen) ----------------------------------
 TELEFON = "+43 676 561 8098"            # z. B. "+43 660 1234567"; leer = Telefon wird nirgends angezeigt
 FORMSPREE = "https://formspree.io/f/xwlpyyoq"          # z. B. "https://formspree.io/f/abcdwxyz"; leer = mailto-Formular
 NAECHSTER_START = os.environ.get("SM_START", "")   # z. B. "November"; leer = Ring entfällt
-ANSCHRIFT = {"strasse": "Eichetstrasse 51", "plz": "5071", "ort": "Wals-Siezenheim"}   # Pflicht nach § 5 ECG
+ANSCHRIFT = {"strasse": "Eichetstraße 51", "plz": "5071", "ort": "Wals-Siezenheim"}   # Pflicht nach § 5 ECG
 UID = ""                # nur eintragen, wenn es eine gibt (z. B. "ATU12345678")
 GEWERBE = {"wortlaut": "Werbeagentur", "behoerde": "Bezirkshauptmannschaft Salzburg-Umgebung", "fachgruppe": "Fachgruppe Werbung und Marktkommunikation"}   # genau laut GISA-Auszug
 INSTAGRAM = ""          # optional, volle Adresse
 LINKEDIN = ""           # optional, volle Adresse
 
 EINFUEHRUNG = True      # Einführungsangebot ein/aus (eine Zeile)
+EINF_ANZAHL = 5         # Das Einführungsangebot gilt für die ersten so vielen Aufträge ...
+EINF_BIS = (2026, 12, 31)   # ... und längstens bis zu diesem Tag (Jahr, Monat, Tag). Danach EINFUEHRUNG = False.
 MONATE = ["Jänner", "Februar", "März", "April", "Mai", "Juni", "Juli", "August",
           "September", "Oktober", "November", "Dezember"]
 KURZ = ["Jän", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"]
@@ -43,6 +45,7 @@ LANG = "de"
 PFAD_EN = {"/": "/en/", "/arbeiten/": "/en/work/", "/leistungen/": "/en/services/", "/handwerk/": "/en/trades/",
            "/ueber-mich/": "/en/about/", "/kontakt/": "/en/contact/", "/danke/": "/en/thanks/",
            "/impressum/": "/en/legal-notice/", "/datenschutz/": "/en/privacy/",
+           "/agb/": "/en/terms/", "/widerruf/": "/en/withdrawal/", "/cookies/": "/en/cookies/",
            "/arbeiten/nickmonu/": "/en/work/nickmonu/", "/arbeiten/hallwirth/": "/en/work/hallwirth/",
            "/arbeiten/lindtner/": "/en/work/lindtner/"}
 PFAD_DE = {v: k for k, v in PFAD_EN.items()}
@@ -97,6 +100,14 @@ def gewerbe_fehlt():
     return not all(GEWERBE.values())
 
 
+def einf_bedingung():
+    """Bedingung des Einführungsangebots als Satzteil, aus EINF_ANZAHL und EINF_BIS."""
+    d = EINF_BIS
+    if LANG == "en":
+        return f"for my first {EINF_ANZAHL} projects, until {d[2]} {MONATE_EN[d[1] - 1]} {d[0]} at the latest"
+    return f"für meine ersten {EINF_ANZAHL} Aufträge, längstens bis {d[2]}. {MONATE[d[1] - 1]} {d[0]}"
+
+
 def offen():
     """Liste dessen, was vor dem Livegang noch fehlt (für bau.py)."""
     o = []
@@ -105,6 +116,9 @@ def offen():
     if not NAECHSTER_START: o.append("NAECHSTER_START (Verfügbarkeits-Ring entfällt)")
     if anschrift_fehlt(): o.append("ANSCHRIFT (Straße und PLZ, Pflicht im Impressum)")
     if gewerbe_fehlt(): o.append("GEWERBE (Wortlaut, Behörde, Fachgruppe laut GISA-Auszug)")
+    import datetime
+    if EINFUEHRUNG and datetime.date.today() > datetime.date(*EINF_BIS):
+        o.append("EINFUEHRUNG ist abgelaufen (EINF_BIS): EINFUEHRUNG = False setzen, sonst wirbt die Seite mit einem Angebot, das nicht mehr gilt")
     return o
 
 
@@ -128,34 +142,35 @@ PAKETE = [
      "umfang": ["1 Seite mit mehreren Bereichen", "responsives Design", "Basis-SEO (Title und Meta)", "2 Korrekturrunden",
                 "Lieferzeit ca. 1–2 Wochen"],
      "optional": "Copywriting, zweite Sprache, Wartung",
-     "betreuung": "Optional zubuchbar.",
+     "betreuung": "Optional zubuchbar: 60 €/Monat, mindestens 3 Monate. Ohne Betreuung bekommen Sie alle Dateien und Zugänge, die Seite läuft bei einem Hoster Ihrer Wahl.",
+     "betreuung_opt": 60,
      "zahlung": "50 % bei Auftragserteilung, 50 % bei Fertigstellung"},
     {"id": "business", "name": "Business-Website", "ab": 2400, "einf": 1500,
      "fuer": "Selbstständige und KMU mit mehreren Angeboten",
      "seiten": "4–7 Unterseiten", "dauer": "ca. 3–5 Wochen", "betreuung_ab": 60,
      "nutzen": "Eine Seite mit 4–7 Unterseiten, die Ihre Angebote einzeln zeigt und am Handy zuerst gebaut ist. Sie sehen das Konzept, bevor ich baue.",
-     "umfang": ["4–7 Unterseiten", "Konzept zur Freigabe vor dem Bau", "responsives Design",
+     "umfang": ["4–7 Unterseiten", "Konzept zur Freigabe vor dem Bau", "responsives Design", "Basis-SEO für jede Seite",
                 "Pflege-Oberfläche für wiederkehrende Inhalte (auf Wunsch)", "Kontaktformular", "3 Korrekturrunden",
-                "Betreuung ab 60 €/Monat gehört dazu (Hosting, kleine Änderungen)", "Lieferzeit ca. 3–5 Wochen"],
+                "Betreuung zzgl. 60 €/Monat, mind. 3 Monate (Hosting, kleine Änderungen)", "Lieferzeit ca. 3–5 Wochen"],
      "optional": "zweite Sprache, Copywriting",
      "betreuung": "Mindestlaufzeit 3 Monate, danach monatlich kündbar.",
      "zahlung": "50 % bei Auftragserteilung, 50 % bei Fertigstellung"},
     {"id": "premium", "name": "Premium", "ab": 4800, "einf": None,
      "fuer": "Marken mit hohem Anspruch an Craft, Bewegung, Individualität. So wie diese Seite und nickmonu.com",
-     "seiten": "wie Business-Website, mehrsprachig", "dauer": "ca. 5–8 Wochen", "betreuung_ab": 80,
+     "seiten": "wie Business-Website, zweisprachig", "dauer": "ca. 5–8 Wochen", "betreuung_ab": 80,
      "nutzen": "Alles aus der Business-Website, dazu Bewegung und Bausteine, die es nur für Ihre Marke gibt. Die Lieferzeit hängt vom Animationsumfang ab.",
      "umfang": ["alles aus Business-Website", "individuelle Animationen (Seitenübergänge, Cursor-Effekte, Lade-Momente)",
-                "maßgeschneiderte Komponenten statt Standardbausteinen", "mehrsprachig als Standard", "4 Korrekturrunden",
-                "Betreuung ab 80 €/Monat gehört dazu", "Lieferzeit ca. 5–8 Wochen, abhängig vom Animationsumfang"],
+                "maßgeschneiderte Komponenten statt Standardbausteinen", "zweisprachig als Standard (z. B. Deutsch und Englisch), jede weitere Sprache siehe Zusatzleistungen", "4 Korrekturrunden",
+                "Betreuung zzgl. 80 €/Monat, mind. 3 Monate", "Lieferzeit ca. 5–8 Wochen, abhängig vom Animationsumfang"],
      "optional": "Bildproduktion/Fotografie, Copywriting",
      "betreuung": "Mindestlaufzeit 3 Monate, danach monatlich kündbar.",
      "zahlung": "40 % bei Start, 30 % nach Konzept-Freigabe, 30 % bei Fertigstellung"},
     {"id": "shop", "name": "Shop", "ab": 3800, "einf": None,
      "fuer": "Kleine Produktpalette, Markenshop",
-     "seiten": "Produktkatalog bis ca. 20 Produkte", "dauer": None, "betreuung_ab": 80,
+     "seiten": "Produktkatalog bis ca. 20 Produkte", "dauer": "ca. 4–6 Wochen", "betreuung_ab": 80,
      "nutzen": "Ein einfacher Markenshop mit überschaubarer Produktzahl. Bei mehr Produkten oder Varianten sage ich Ihnen vorher, welche technische Basis passt.",
-     "umfang": ["Produktkatalog bis ca. 20 Produkte", "Checkout", "eine Zahlungsanbindung", "responsives Design", "3 Korrekturrunden",
-                "Betreuung ab 80 €/Monat gehört dazu"],
+     "umfang": ["Produktkatalog bis ca. 20 Produkte", "Checkout", "eine Zahlungsanbindung", "responsives Design", "Basis-SEO für jede Seite", "3 Korrekturrunden",
+                "Lieferzeit ca. 4–6 Wochen", "Betreuung zzgl. 80 €/Monat, mind. 3 Monate"],
      "optional": None,
      "hinweis": "Bei höherer Komplexität (viele Varianten, internationaler Versand, Lagerhaltung) berate ich ehrlich, welche technische Basis wirklich passt, gegebenenfalls mit einem Individualangebot außerhalb des Fixpakets.",
      "betreuung": "Mindestlaufzeit 3 Monate, danach monatlich kündbar.",
@@ -163,12 +178,14 @@ PAKETE = [
 ]
 
 ZUSATZ = [
-    ("SEO-Basis-Setup (Meta-Tags, Struktur, Sitemap, Google-Unternehmensprofil)", "250–400 €"),
+    ("SEO-Setup mit Google-Unternehmensprofil (Struktur, Sitemap, Eintrag einrichten)", "250–400 €"),
     ("Copywriting je Unterseite", "60–90 € je Seite"),
     ("Zusätzliche Sprache", "+15–20 % auf den Paketpreis"),
-    ("Wartung „Aktiv“: mehr Änderungsvolumen, priorisierte Bearbeitung (Upgrade zur inkludierten Betreuung)", "150 €/Monat"),
+    ("Betreuung „Aktiv“: mehr Änderungen pro Monat, priorisierte Bearbeitung (statt der normalen Betreuung)", "150 €/Monat statt 60 bzw. 80 €"),
     ("Express-Zuschlag (Lieferzeit halbiert)", "+20–30 % auf den Paketpreis"),
 ]
+
+ZUSATZ_HINWEIS = "Wo eine Spanne steht, nenne ich Ihnen den genauen Betrag im schriftlichen Angebot."
 
 BETREUUNG_UMFANG = [
     ("Hosting", "Die Seite liegt auf meinem Hosting. Sie kümmern sich um keinen Server und keine Verlängerung."),
@@ -203,35 +220,36 @@ _EN = {
         "umfang": ["1 page with several sections", "responsive design", "Basic SEO (title and meta description)", "2 rounds of revisions",
                    "Delivery in approx. 1–2 weeks"],
         "optional": "copywriting, second language, maintenance",
-        "betreuung": "Optional add-on.",
+        "betreuung": "Optional add-on: €60/month, minimum term 3 months. Without care you receive all files and access details, and the site can run with a host of your choice.",
+        "betreuung_opt": 60,
         "zahlung": "50 % on order, 50 % on completion"},
     "business": {
         "name": "Business website", "fuer": "Freelancers and small businesses with several services",
         "seiten": "4–7 subpages", "dauer": "approx. 3–5 weeks",
         "nutzen": "A site with 4–7 subpages that presents your services one by one and is designed mobile-first. You see the concept before I build.",
-        "umfang": ["4–7 subpages", "Concept for your approval before the build", "responsive design",
+        "umfang": ["4–7 subpages", "Concept for your approval before the build", "responsive design", "Basic SEO for every page",
                    "Editing interface for recurring content (on request)", "Contact form", "3 rounds of revisions",
-                   "Ongoing care from €60/month is included (hosting, small changes)", "Delivery in approx. 3–5 weeks"],
+                   "Ongoing care plus €60/month, min. 3 months (hosting, small changes)", "Delivery in approx. 3–5 weeks"],
         "optional": "second language, copywriting",
         "betreuung": "Minimum term 3 months, then cancellable monthly.",
         "zahlung": "50 % on order, 50 % on completion"},
     "premium": {
         "name": "Premium",
         "fuer": "Brands with high standards for craft, motion and individuality. Like this site and nickmonu.com",
-        "seiten": "as Business website, multilingual", "dauer": "approx. 5–8 weeks",
+        "seiten": "as Business website, bilingual", "dauer": "approx. 5–8 weeks",
         "nutzen": "Everything in the Business website, plus motion and building blocks that exist only for your brand. Delivery time depends on the amount of animation.",
         "umfang": ["everything in the Business website", "custom animations (page transitions, cursor effects, loading moments)",
-                   "tailor-made components instead of standard blocks", "multilingual as standard", "4 rounds of revisions",
-                   "Ongoing care from €80/month is included", "Delivery in approx. 5–8 weeks, depending on the amount of animation"],
+                   "tailor-made components instead of standard blocks", "bilingual as standard (e.g. German and English), each further language see add-ons", "4 rounds of revisions",
+                   "Ongoing care plus €80/month, min. 3 months", "Delivery in approx. 5–8 weeks, depending on the amount of animation"],
         "optional": "image production/photography, copywriting",
         "betreuung": "Minimum term 3 months, then cancellable monthly.",
         "zahlung": "40 % at start, 30 % after concept approval, 30 % on completion"},
     "shop": {
         "name": "Shop", "fuer": "Small product range, brand shop",
-        "seiten": "Product catalogue of up to approx. 20 products",
+        "seiten": "Product catalogue of up to approx. 20 products", "dauer": "approx. 4–6 weeks",
         "nutzen": "A simple brand shop with a manageable number of products. If you have more products or variants, I will tell you beforehand which technical basis fits.",
-        "umfang": ["Product catalogue of up to approx. 20 products", "Checkout", "one payment integration", "responsive design",
-                   "3 rounds of revisions", "Ongoing care from €80/month is included"],
+        "umfang": ["Product catalogue of up to approx. 20 products", "Checkout", "one payment integration", "responsive design", "Basic SEO for every page",
+                   "3 rounds of revisions", "Delivery in approx. 4–6 weeks", "Ongoing care plus €80/month, min. 3 months"],
         "hinweis": "For higher complexity (many variants, international shipping, stock management) I will advise you candidly which technical basis really fits, if necessary with a custom quote outside the fixed package.",
         "betreuung": "Minimum term 3 months, then cancellable monthly.",
         "zahlung": "40 % at start, 30 % after concept approval, 30 % on completion"},
@@ -244,12 +262,14 @@ def pakete():
 
 
 ZUSATZ_EN = [
-    ("Basic SEO setup (meta tags, structure, sitemap, Google Business Profile)", "€250–400"),
+    ("SEO setup with Google Business Profile (structure, sitemap, set up your listing)", "€250–400"),
     ("Copywriting per subpage", "€60–90 per page"),
     ("Additional language", "+15–20 % on the package price"),
-    ("“Active” maintenance: more changes per month, prioritised handling (upgrade to the included care)", "€150/month"),
+    ("“Active” care: more changes per month, prioritised handling (instead of the standard care)", "€150/month instead of €60 or €80"),
     ("Express surcharge (delivery time halved)", "+20–30 % on the package price"),
 ]
+
+ZUSATZ_HINWEIS_EN = "Where a range is shown, I give you the exact amount in the written quote."
 
 BETREUUNG_UMFANG_EN = [
     ("Hosting", "The site lives on my hosting. You don't have to deal with a server or renewals."),
@@ -399,8 +419,12 @@ def paket_karte(p, detail=False):
     """Karte mit Ab-Preis. Mit detail=True klappt „Dafür bekommen Sie“ auf (details, geht ohne JavaScript)."""
     ab = tr("ab", "from")
     dauer = f'<li>{e(p["dauer"])}</li>' if p.get("dauer") else ""
-    bet = (f'<li>{tr("Betreuung ab", "Care from")} {eur(p["betreuung_ab"])}{tr("/Monat", "/month")}</li>'
-           if p.get("betreuung_ab") else "")
+    if p.get("betreuung_ab"):
+        bet = f'<li>{tr("Betreuung zzgl.", "Care, plus")} {eur(p["betreuung_ab"])}{tr("/Monat", "/month")}</li>'
+    elif p.get("betreuung_opt"):
+        bet = f'<li>{tr("Betreuung optional,", "Care optional,")} {eur(p["betreuung_opt"])}{tr("/Monat", "/month")}</li>'
+    else:
+        bet = ""
     einf = ""
     if EINFUEHRUNG and p.get("einf"):
         einf = f'<p class="karte-einf">{tr("Einführungsangebot:", "Launch offer:")} {tr("ab", "from")} {eur(p["einf"])}</p>'
@@ -437,19 +461,21 @@ def datenblatt(pk):
     zeilen = ""
     for p in pk:
         if p.get("betreuung_ab"):
-            bet = f'{tr("ab", "from")}\u00a0{eur(p["betreuung_ab"])}{tr("/Monat", "/month")}'
+            bet = f'{tr("zzgl.", "plus")}\u00a0{eur(p["betreuung_ab"])}{tr("/Monat, mind. 3 Monate", "/month, min. 3 months")}'
+        elif p.get("betreuung_opt"):
+            bet = f'{tr("optional,", "optional,")}\u00a0{eur(p["betreuung_opt"])}{tr("/Monat", "/month")}'
         else:
             bet = tr("optional", "optional")
         dauer = p.get("dauer") or tr("nach Absprache", "by arrangement")
         einf = ""
         if EINFUEHRUNG and p.get("einf"):
-            einf = f'<span class="db-einf">{tr("Befristet:", "Limited offer:")} {tr("ab", "from")}\u00a0{eur(p["einf"])}</span>'
+            einf = f'<span class="db-einf">{tr("Einführungsangebot:", "Launch offer:")} {tr("ab", "from")}\u00a0{eur(p["einf"])}</span>'
         zeilen += (f'<tr id="{p["id"]}-zeile"><th scope="row"><a class="db-name" href="{P("/leistungen/#" + p["id"])}">{e(p["name"])}</a>'
                    f'<span class="db-fuer">{e(p["fuer"])}</span></th>'
                    f'<td data-l="{L["u"]}">{e(p["seiten"])}</td><td data-l="{L["d"]}">{e(dauer)}</td><td data-l="{L["b"]}">{bet}</td>'
                    f'<td class="db-preis" data-l="{L["pr"]}"><span>{tr("ab", "from")}\u00a0{eur(p["ab"])}</span>{einf}</td></tr>')
     cap = tr("Die vier Pakete im Vergleich", "The four packages compared")
-    return (f'<div class="tab-wrap"><table class="datenblatt"><caption class="nur-leser">{cap}</caption><thead><tr>'
+    return (f'<div class="tab-wrap" tabindex="0" role="region" aria-label="{cap}"><table class="datenblatt"><caption class="nur-leser">{cap}</caption><thead><tr>'
             f'<th scope="col">{L["p"]}</th><th scope="col">{L["u"]}</th><th scope="col">{L["d"]}</th><th scope="col">{L["b"]}</th>'
             f'<th scope="col">{L["pr"]}</th></tr></thead><tbody>{zeilen}</tbody></table></div>')
 
@@ -554,7 +580,19 @@ def formular(paket=""):
     hinweis = (tr("Ihre Angaben gehen über den Formulardienst Formspree an mich. Mehr dazu im ",
                   "Your details reach me through the form service Formspree. More in the ") if FORMSPREE else
                tr("Das Formular öffnet Ihr E-Mail-Programm. Mehr dazu im ", "The form opens your email program. More in the "))
-    return f'''<form class="formular" {aktion}{dat} data-formular novalidate>
+    if FORMSPREE:
+        z_text = tr("Ich bin damit einverstanden, dass meine Angaben zur Bearbeitung meiner Anfrage über den Formulardienst Formspree (USA) an Simon Monu übermittelt werden. "
+                    "Ich kann diese Einwilligung jederzeit widerrufen. Wer das nicht möchte, schreibt direkt per E-Mail an ",
+                    "I agree that my details are sent to Simon Monu through the form service Formspree (USA) so that my enquiry can be handled. "
+                    "I can withdraw this consent at any time. If you prefer not to, write directly by email to ")
+    else:
+        z_text = tr("Ich bin damit einverstanden, dass meine Angaben zur Bearbeitung meiner Anfrage an Simon Monu übermittelt werden. "
+                    "Ich kann diese Einwilligung jederzeit widerrufen. Alternativ schreibe ich direkt per E-Mail an ",
+                    "I agree that my details are sent to Simon Monu so that my enquiry can be handled. "
+                    "I can withdraw this consent at any time. Alternatively I write directly by email to ")
+    zustimmung = (f'<div class="feld feld-breit feld-zustimmung"><input id="f-ok" name="{tr("Einwilligung", "Consent")}" type="checkbox" value="{tr("ja", "yes")}" required>'
+                  f'<label for="f-ok">{z_text}<a href="mailto:{MAIL}">{MAIL}</a>. {tr("Mehr dazu im", "More in the")} <a href="{P("/datenschutz/")}">{tr("Datenschutz", "privacy policy")}</a>.</label></div>')
+    return f'''<form class="formular" {aktion}{dat} data-formular>
       <div class="feld"><label for="f-name">{n_name}</label><input id="f-name" name="{n_name}" type="text" autocomplete="name" required></div>
       <div class="feld"><label for="f-mail">{n_mail}</label><input id="f-mail" name="{n_mail}" type="email" autocomplete="email" required></div>
       <div class="feld"><label for="f-firma">{n_firma}</label><input id="f-firma" name="{n_firma}" type="text" autocomplete="organization"></div>
@@ -562,6 +600,7 @@ def formular(paket=""):
       <div class="feld feld-breit"><label for="f-text">{n_text}</label><textarea id="f-text" name="{n_text}" rows="5" required></textarea></div>
       <div class="feld falle" aria-hidden="true"><label for="f-web">{tr("Bitte leer lassen", "Please leave empty")}</label><input id="f-web" name="_gotcha" type="text" tabindex="-1" autocomplete="off"></div>
       <div class="formular-fuss">
+        {zustimmung}
         <button class="knopf" type="submit">{tr("Erstgespräch anfragen", "Book an intro call")}</button>
         <p class="klein">{hinweis}<a href="{P("/datenschutz/")}">{tr("Datenschutz", "privacy policy")}</a>.</p>
       </div>
@@ -618,7 +657,7 @@ def fusszeile():
              "Websites for businesses, freelancers and brands in Vienna and Salzburg. Designed and built by one person.")}</p>
     </div>
     <nav class="fuss-spalte fuss-seiten" aria-label="{tr("Seiten", "Pages")}"><h2 class="fuss-titel">{tr("Seiten", "Pages")}</h2><ul>{seiten}</ul></nav>
-    <nav class="fuss-spalte fuss-recht" aria-label="{tr("Rechtliches", "Legal")}"><h2 class="fuss-titel">{tr("Rechtliches", "Legal")}</h2><ul><li><a href="{P("/impressum/")}">{tr("Impressum", "Legal notice")}</a></li><li><a href="{P("/datenschutz/")}">{tr("Datenschutz", "Privacy")}</a></li></ul></nav>
+    <nav class="fuss-spalte fuss-recht" aria-label="{tr("Rechtliches", "Legal")}"><h2 class="fuss-titel">{tr("Rechtliches", "Legal")}</h2><ul><li><a href="{P("/impressum/")}">{tr("Impressum", "Legal notice")}</a></li><li><a href="{P("/datenschutz/")}">{tr("Datenschutz", "Privacy")}</a></li><li><a href="{P("/cookies/")}">{tr("Cookies und Speicher", "Cookies and storage")}</a></li><li><a href="{P("/agb/")}">{tr("AGB", "Terms")}</a></li><li><a href="{P("/widerruf/")}">{tr("Widerrufsrecht", "Right of withdrawal")}</a></li></ul></nav>
     <div class="fuss-spalte fuss-kontakt"><h2 class="fuss-titel">{tr("Kontakt", "Contact")}</h2><ul><li><a href="mailto:{MAIL}">{MAIL}</a></li>{tel}{soc}</ul></div>
   </div>
   <div class="wrap fuss-unten">
@@ -641,10 +680,12 @@ def krumel(pfad, titel):
     if segs:
         namen = {"arbeiten": "Arbeiten", "leistungen": "Leistungen und Preise", "handwerk": "Für Handwerksbetriebe",
                  "ueber-mich": "Über mich", "kontakt": "Kontakt", "nickmonu": "nickmonu.com", "hallwirth": "Tischlerei Hallwirth",
-                 "lindtner": "Vera Lindtner Coaching", "impressum": "Impressum", "datenschutz": "Datenschutz"}
+                 "lindtner": "Vera Lindtner Coaching", "impressum": "Impressum", "datenschutz": "Datenschutz",
+                 "agb": "Allgemeine Geschäftsbedingungen", "widerruf": "Widerrufsrecht", "cookies": "Cookies und Speicher"}
         namen_en = {"work": "Work", "services": "Services and pricing", "trades": "For trades businesses", "about": "About",
                     "contact": "Contact", "nickmonu": "nickmonu.com", "hallwirth": "Tischlerei Hallwirth",
-                    "lindtner": "Vera Lindtner Coaching", "legal-notice": "Legal notice", "privacy": "Privacy"}
+                    "lindtner": "Vera Lindtner Coaching", "legal-notice": "Legal notice", "privacy": "Privacy",
+                    "terms": "Terms and conditions", "withdrawal": "Right of withdrawal", "cookies": "Cookies and storage"}
         acc = "/en" if en else ""
         for s in segs:
             acc += "/" + s

@@ -107,12 +107,12 @@ def startseite():
     p = pakete()
     einf = ""
     if EINFUEHRUNG:
-        einf = (f'<p class="einfuehrung">A launch price applies to the first projects: One-pager from {eur(p[0]["einf"])}, Business website from {eur(p[1]["einf"])}. '
+        einf = (f'<p class="einfuehrung">Launch offer {einf_bedingung()}: One-pager from {eur(p[0]["einf"])}, Business website from {eur(p[1]["einf"])}. '
                 'Same work, same scope. In return, I may show your finished site as a reference.</p>')
     hero = f'''<div class="wrap hero-innen">
   <h1 id="h1" class="hero-titel"><span class="h1-dach">Web design in Vienna and Salzburg</span>Every website<br> a one-off.</h1>
   <div class="hero-text">
-    <p class="lead">I design and code websites for businesses, freelancers and brands in Vienna and Salzburg. No site builder, no template, every line written by me.</p>
+    <p class="lead">I design and code websites for businesses, freelancers and brands in Vienna and Salzburg. No site builder, no template: individually designed and developed.</p>
     <p class="knoepfe">{knopf("See my work", "#arbeiten")} {textlink("Prices from " + eur(p[0]["ab"]), "/leistungen/")}</p>
   </div>
 </div>'''
@@ -155,7 +155,7 @@ def startseite():
   <h2 id="h-ueber" class="statement">Your web designer for Vienna and Salzburg, from the first call to the handover.</h2>
   <div class="ueber-text">
     <p>I am Simon Monu and I work on my own, with my own business since autumn 2026. My first project is nickmonu.com, my father's website. It has grown to version {FASSUNG} because I improved it after every piece of feedback.</p>
-    <p>I build every site myself in code, and I answer your message myself.</p>
+    <p>I develop every site individually in code, and I answer your message personally.</p>
     <p class="ueber-link">{textlink("More about me", "/ueber-mich/")}</p>
   </div>
 </div>'''
@@ -201,9 +201,9 @@ def leistungen():
     if EINFUEHRUNG:
         einf = f'''<section class="sek sek-einf" aria-labelledby="h-einf"><div class="wrap raster">
   <div class="einf-text">
-    <h2 id="h-einf" class="t-l">Launch offer for the first projects.</h2>
+    <h2 id="h-einf" class="t-l">Launch offer for my first {EINF_ANZAHL} projects.</h2>
     <p class="lead">One-pager from {eur(p[0]["einf"])} instead of from {eur(p[0]["ab"])}. Business website from {eur(p[1]["einf"])} instead of from {eur(p[1]["ab"])}. Same work, same scope.</p>
-    <p>In return, I may show your finished site as a reference. How long the offer runs, I am happy to discuss in the intro call: it is limited in time and applies to the first projects.</p>
+    <p>In return, I may show your finished site as a reference. The offer applies {einf_bedingung()}; care is not affected. Whether one of the {EINF_ANZAHL} places is still free, I will tell you in the intro call.</p>
   </div>
 </div></section>'''
     zus = "".join(f"<tr><td>{e(t)}</td><td class=\"preis-spalte\">{pr}</td></tr>" for t, pr in ZUSATZ_EN)
@@ -233,13 +233,14 @@ def leistungen():
 {einf}
 <section class="sek sek-zusatz" aria-labelledby="h-zusatz"><div class="wrap">
   <h2 id="h-zusatz" class="t-l">Extras</h2>
-  <div class="tab-wrap"><table class="tabelle"><caption>Prices are final prices, without VAT shown</caption><thead><tr><th scope="col">Service</th><th scope="col">Price</th></tr></thead><tbody>{zus}</tbody></table></div>
-  <p class="klein">From the Business website upwards, ongoing care is a fixed part of the package. Only with the One-pager is it an optional add-on.</p>
+  <p class="klein">{ZUSATZ_HINWEIS_EN}</p>
+  <div class="tab-wrap" tabindex="0" role="region" aria-label="Additional services and prices"><table class="tabelle"><caption>Prices are final prices, without VAT shown</caption><thead><tr><th scope="col">Service</th><th scope="col">Price</th></tr></thead><tbody>{zus}</tbody></table></div>
+  <p class="klein">From the Business website upwards, care is added to the package price (plus €60 or €80/month, minimum 3 months) so that your site is looked after from the start. Only with the One-pager is it an optional add-on. Example, Business website: €2,400 one-off plus 3 × €60 makes at least €2,580 for the build and the first three months.</p>
 </div></section>
 <section class="sek sek-betreuung" aria-labelledby="h-betreuung"><div class="wrap raster">
   <div class="betreuung-text">
     <h2 id="h-betreuung" class="t-l">What care includes.</h2>
-    <p class="lead">Business website from €60/month, Premium and Shop from €80/month. Minimum term 3 months, then cancellable monthly.</p>
+    <p class="lead">Business website €60/month, Premium and Shop €80/month, optional €60/month with the One-pager. Minimum term 3 months, then cancellable monthly. This amount is added to the package price.</p>
   </div>
   <ul class="betreuung-liste">{bet}</ul>
 </div></section>
@@ -289,13 +290,13 @@ def handwerk():
         ("Your services with a guide price.", "So nobody has to call just to find out whether it fits."),
         ("Photos of your work.", "From real jobs. You supply the photos, I make them quick and sharp."),
         ("Built mobile-first.", "That is where customers look first, so the design starts there."),
-        ("Google Business Profile.", "With the basic SEO setup (€250–400) I set up your listing so people can find you on the map, too."),
+        ("Google Business Profile.", "With the SEO setup (€250–400) I set up your Google Business Profile listing so people can find you on the map, too."),
     ]
     dh = "".join(f"<li><strong>{e(t)}</strong> {e(x)}</li>" for t, x in drin)
     faq = [
         ("What do I have to provide?", "Photos of your work, keywords about your services and two approvals: one for the concept, one for the finished site. I take care of the rest."),
         ("Who writes the texts?", "If you have no time to write, I write them for €60–90 per subpage. You approve them."),
-        ("What does it cost per month?", "Nothing with the One-pager, where care is optional. With the Business website, care from €60/month is included, for at least 3 months, then cancellable monthly."),
+        ("What does it cost per month?", "Nothing with the One-pager, where care is optional (€60/month). With the Business website, €60/month for care is added to the package price, for at least 3 months, then cancellable monthly."),
         ("Do I own the domain?", "Yes. The domain is always registered in your name, never mine. You get all access details."),
     ]
     fq = "".join(f'<details class="faq"><summary><span>{e(f)}</span></summary><p>{e(a)}</p></details>' for f, a in faq)
@@ -382,7 +383,7 @@ def ueber_mich():
   <div class="text-spalte">
     <p>I build without a site builder and without a template. That has consequences for you: the page loads fast because nothing is on it that it does not need. This one consists, on a first visit, of <span data-live-n>@@N@@</span> files totalling <span data-live-kb>@@KB@@</span> KB. It sets no cookies. And it belongs to you, including domain and access details.</p>
     <p>What that looks like is shown by an excerpt from my own generator. It prints this warning when the address is missing from the legal notice:</p>
-    <figure class="code"><pre><code>def anschrift_fehlt():
+    <figure class="code"><pre tabindex="0" role="region" aria-label="Code excerpt"><code>def anschrift_fehlt():
     return not (ANSCHRIFT["strasse"] and ANSCHRIFT["plz"])
 
 # in bau.py
@@ -497,9 +498,10 @@ def impressum():
 
     <h2>Copyright</h2>
     <p>The texts, design and programming of this website are protected by copyright. The work shown (nickmonu.com and the two concept demos) belongs to its respective owners or is expressly labelled as an invented demo.</p>
+    <p>Image credits: in the copy of nickmonu.com the photos are by Joachim Bergauer and S. Monu (each © with the creators). The stock photos in the two concept demos come from Unsplash and Pexels and are used under their licences. The creators are named next to the images in the demos. The portraits there do not show the invented people.</p>
 
     <h2>Fonts</h2>
-    <p>Schibsted Grotesk under the SIL Open Font License 1.1. The typeface is hosted on this server.</p>
+    <p>Schibsted Grotesk and Fragment Mono under the SIL Open Font License 1.1. The typefaces are hosted on this server.</p>
 
     <h2>Liability for links</h2>
     <p>The operators of linked websites are solely responsible for their content. At the time of linking, no unlawful content was apparent. If such content becomes known, I will remove the link promptly.</p>
@@ -510,57 +512,192 @@ def impressum():
     return ("/en/legal-notice/", "Legal notice", "Legal notice and disclosure of simonmonu.at.", inhalt, {"og": "start", "robots": "noindex, follow"})
 
 
+def _rechtsseite(h1, lead, courtesy, koerper, stand):
+    return f'''<section class="sek rechtstext" aria-labelledby="h1"><div class="wrap raster">
+  <div class="rechtstext-innen">
+    <h1 id="h1" class="t-xl">{h1}</h1>
+    <p class="lead">{lead}</p>
+    {courtesy}
+{koerper}
+    <p class="stand klein">{stand}</p>
+  </div>
+</div></section>'''
+
+
 def datenschutz():
     if FORMSPREE:
-        form = ('<p>To deliver your message I use the service Formspree (Formspree, Inc., USA). Formspree receives the form data and forwards it to me by email. '
-                'The transfer to the USA is based on the EU standard contractual clauses (Art. 46 (2) (c) GDPR). If you do not want that, simply write me an email directly.</p>\n'
-                '    <p>If delivery through Formspree is not available, the form opens your email program with a prepared message instead. The data then goes directly to me through your own email provider.</p>')
+        form = f'''<p>When you submit the form, I process your name, your email address and your message and, if you give them, your business or project and package preference. Name, email address and message are required because otherwise I cannot reply. Everything else is optional. I also record that you agreed to the transmission.</p>
+    <p>The purpose is to answer your enquiry and to make you an offer. The legal basis is the performance of pre-contractual measures at your request (Art. 6 (1) (b) GDPR).</p>
+    <p>To deliver your message I use the service Formspree (Formspree, Inc., USA). Formspree receives the form data, stores it and forwards it to me by email. Formspree is based in the USA. According to its own information, Formspree bases transfers from the EU on the standard contractual clauses of the European Commission. In addition, I transmit your details only if you expressly agree in the form (Art. 49 (1) (a) GDPR). There is a risk that US authorities can access the data and that your rights are harder to enforce there than in the EU. You can withdraw your consent at any time with effect for the future; an email to <a href="mailto:{MAIL}">{MAIL}</a> is enough. If you do not want to agree, simply write to me directly by email.</p>
+    <p>If delivery through Formspree is not available, the form opens your email program with a prepared message instead. The data then goes directly to me through your own email provider.</p>'''
     else:
         form = '<p>The form opens your email program with a prepared message. The data then goes directly to me through your own email provider. There is no form service in between.</p>'
-    inhalt = f'''<section class="sek rechtstext" aria-labelledby="h1"><div class="wrap raster">
-  <div class="rechtstext-innen">
-    <h1 id="h1" class="t-xl">Privacy policy</h1>
-    <p class="lead">In short: this website sets no cookies, counts no visitors and embeds nothing from third parties.</p>
-    {COURTESY.format(de="/datenschutz/", name="Datenschutz")}
-
+    tel = f' Phone: <a href="{telefon_href()}">{e(TELEFON)}</a>.' if TELEFON else ""
+    koerper = f'''
     <h2>Controller</h2>
-    <p>Simon Monu, {_anschrift_zeile()}. For all questions about data protection, an email to <a href="mailto:{MAIL}">{MAIL}</a> is enough.</p>
+    <p>Simon Monu, {_anschrift_zeile()}. Email: <a href="mailto:{MAIL}">{MAIL}</a>.{tel} For all questions about data protection, an email is enough.</p>
 
-    <h2>When you visit the website</h2>
-    <p>The website is delivered through Cloudflare (Cloudflare, Inc., USA, with servers in the EU as well), which works on my behalf as host and content delivery network (data processing under Art. 28 GDPR). The server processes technically necessary access data: IP address, date and time, the page requested, browser and operating system. This is needed to deliver the page and to fend off attacks. The legal basis is my legitimate interest in secure operation (Art. 6 (1) (f) GDPR).</p>
+    <h2>When you visit the website (hosting)</h2>
+    <p>This website is hosted on GitHub Pages (GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA). When you open a page, GitHub processes technically necessary access data, above all your IP address as well as date and time, the page requested, your browser and your operating system. According to GitHub, the IP address of visitors is stored for security reasons even if you have no GitHub account. For the delivery network, storage period and GitHub's responsibility, GitHub's <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener" target="_blank">privacy statement</a> applies. I do not evaluate this access data myself.</p>
+    <p>The purpose is to deliver the page and to run it securely and stably. The legal basis is my legitimate interest in this (Art. 6 (1) (f) GDPR). GitHub is based in the USA. According to its privacy statement, GitHub bases transfers from the European Economic Area on the standard contractual clauses of the European Commission (Art. 46 (2) (c) GDPR).</p>
 
     <h2>No cookies, no statistics</h2>
-    <p>There are no cookies, no visitor counting, no advertising or analytics services.</p>
-    <p>This website stores up to two items in your browser that never leave your device and are not evaluated:</p>
-    <ul>
-      <li>In session storage (sessionStorage) a marker “sm-intro”, so that the short start view runs only once per visit.</li>
-      <li>In local storage (localStorage) an entry “sm-theme”, if you switch the appearance to light or dark.</li>
-    </ul>
-    <p>The embedded work is hosted on the same server. Two of the pieces likewise remember in session storage that their start view has already run: the copy of nickmonu.com (“nm-eintritt”) and the Vera Lindtner demo (“vl-intro”). The form in the nickmonu copy sends nothing.</p>
-    <p>They serve only to display the website you requested the way you asked for it. That is why they are permitted without consent under § 165 (3) of the Austrian Telecommunications Act 2021. The session markers disappear when you close the tab.</p>
+    <p>There are no cookies, no visitor counting, no advertising and no analytics services. This website stores up to two items in your browser that never leave your device and are not evaluated: in session storage a marker “sm-intro”, so that the short start view runs only once per visit, and in local storage an entry “sm-theme”, if you switch the appearance to light or dark. The embedded pieces of work each set one further session marker. All items with purpose and duration are listed on the page <a href="{P("/cookies/")}">Cookies and storage</a>. That is why no cookie banner is needed (§ 165 (3) of the Austrian Telecommunications Act 2021).</p>
     <p>The start view reads from your browser which files of this page were loaded and how large they are, and shows them. This happens only on your device. Nothing is sent to me or to third parties.</p>
 
     <h2>Fonts</h2>
     <p>The fonts are hosted on the same server as the website. There is no connection to Google Fonts or any other font service.</p>
 
     <h2>Enquiry form</h2>
-    <p>When you submit the form, your details are processed: name, email address, on request business or project, package preference and your message. I use them solely to answer your enquiry. The legal basis is the initiation of a contract (Art. 6 (1) (b) GDPR). I delete the data once the enquiry is dealt with and no statutory retention duties stand in the way.</p>
     {form}
 
-    <h2>Email</h2>
-    <p>When you write to me, I process your message and your address in order to reply (Art. 6 (1) (b) or (f) GDPR), and delete them when the matter is settled and no retention duties apply.</p>
+    <h2>Email and phone</h2>
+    <p>When you write to me or call me, I process your email address, your message and, if applicable, your phone number in order to reply (Art. 6 (1) (b) or (f) GDPR). My emails are held by my email provider.</p>
 
-    <h2>Links to other websites</h2>
-    <p>Links to nickmonu.com and other sites are ordinary links. You leave this website only when you click one; the privacy policy of the respective provider applies there.</p>
+    <h2>How long I keep data</h2>
+    <p>If no contract is concluded, I delete your enquiry no later than six months after the last message, including at Formspree. If a contract is concluded, I keep the documents for as long as the law requires (currently seven years, § 132 of the Austrian Federal Fiscal Code) and delete them afterwards.</p>
+
+    <h2>Disclosure, automated decisions</h2>
+    <p>I pass on your data only if that is necessary for your enquiry (Formspree, my email provider) or required by law. There is no automated decision-making and no profiling.</p>
+
+    <h2>Embedded work and links</h2>
+    <p>The pieces of work under “Work” run in the same window and are hosted on the same server. The forms of the work send nothing: the demos only show a demo message, and the form in the copy of nickmonu.com points to the original site. Links to nickmonu.com and other sites are ordinary links. You leave this website only when you click one; the privacy policy of the respective provider applies there.</p>
 
     <h2>Your rights</h2>
-    <p>You have the right to access, rectification, erasure, restriction of processing, data portability and objection. You can withdraw any consent you have given at any time. An email to <a href="mailto:{MAIL}">{MAIL}</a> is enough.</p>
-    <p>You can also lodge a complaint with the Austrian Data Protection Authority: Barichgasse 40–42, 1030 Vienna, <a href="https://www.dsb.gv.at" rel="noopener" target="_blank">dsb.gv.at</a>.</p>
+    <p>You have the right to access, rectification, erasure, restriction of processing, data portability and objection, in particular to processing based on legitimate interests (Art. 21 GDPR). You can withdraw any consent you have given at any time. An email to <a href="mailto:{MAIL}">{MAIL}</a> is enough.</p>
+    <p>You can also lodge a complaint with the Austrian Data Protection Authority: Barichgasse 40–42, 1030 Vienna, <a href="https://www.dsb.gv.at" rel="noopener" target="_blank">dsb.gv.at</a>.</p>'''
+    return ("/en/privacy/", "Privacy policy",
+            "Privacy policy of simonmonu.at: no cookies, no statistics, hosting on GitHub Pages, form through Formspree.",
+            _rechtsseite("Privacy policy", "In short: this website sets no cookies, counts no visitors and embeds nothing from third parties. The host, GitHub, stores your IP address for technical reasons when you open a page. If you use the form, your message goes through the service Formspree.",
+                         COURTESY.format(de="/datenschutz/", name="Datenschutz"), koerper, "As of: October 2026"),
+            {"og": "start", "robots": "noindex, follow"})
 
-    <p class="stand klein">As of: September 2026</p>
-  </div>
-</div></section>'''
-    return ("/en/privacy/", "Privacy policy", "Privacy policy of simonmonu.at: no cookies, no statistics, no third-party services.", inhalt,
+
+def cookies():
+    tab = '''<div class="tab-wrap" tabindex="0" role="region" aria-label="Table of browser storage"><table class="tabelle tabelle-speicher"><caption>All items that this website and its embedded work store in the browser</caption>
+      <thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Purpose</th><th scope="col">Duration</th></tr></thead>
+      <tbody>
+      <tr><th scope="row">sm-theme</th><td>localStorage</td><td>Remembers your choice of light, dark or system when you switch the appearance.</td><td>until you set it back to “system”</td></tr>
+      <tr><th scope="row">sm-intro</th><td>sessionStorage</td><td>Makes sure the short start view runs only once per visit.</td><td>until you close the tab</td></tr>
+      <tr><th scope="row">nm-eintritt</th><td>sessionStorage</td><td>Only in the copy of nickmonu.com under “Work”: start view once per visit.</td><td>until you close the tab</td></tr>
+      <tr><th scope="row">vl-intro</th><td>sessionStorage</td><td>Only in the Vera Lindtner demo: start view once per visit.</td><td>until you close the tab</td></tr>
+      </tbody></table></div>'''
+    koerper = f'''
+    <h2>Cookies</h2>
+    <p>This website sets no cookies. There are also no third-party services that would set cookies: no statistics, no advertising, no maps, no embedded videos, no external fonts.</p>
+
+    <h2>Browser storage</h2>
+    <p>At most, the website stores the following items in the browser. They contain no personal data, are not evaluated and never leave your device.</p>
+    {tab}
+
+    <h2>Legal basis</h2>
+    <p>The items serve only to display the website you requested as intended. They are technically necessary for the service you expressly asked for or result from your own choice. That is why, under § 165 (3) of the Austrian Telecommunications Act 2021, no consent is needed and there is no cookie banner.</p>
+
+    <h2>What you can do</h2>
+    <p>You can delete or block browser storage at any time in your browser settings. The website works without it as well. The start view then runs on every page change, and your choice of light or dark is not remembered.</p>
+
+    <h2>More on privacy</h2>
+    <p>How access data at the host and details in the enquiry form are processed is set out in the <a href="{P("/datenschutz/")}">privacy policy</a>.</p>'''
+    return ("/en/cookies/", "Cookies and storage",
+            "Cookies and browser storage on simonmonu.at: no cookies, at most four browser items, no cookie banner needed.",
+            _rechtsseite("Cookies and storage", "This website sets no cookies. That is why there is no cookie banner here. This page shows what is stored in the browser, what for and for how long.",
+                         COURTESY.format(de="/cookies/", name="Cookies und Speicher"), koerper, "As of: October 2026"),
+            {"og": "start", "robots": "noindex, follow"})
+
+
+def agb():
+    koerper = f'''
+    <h2>1. Scope</h2>
+    <p>These terms apply to all contracts for web design, programming, hosting and maintenance between Simon Monu, {_anschrift_zeile()} (“I”), and you as the client (“you”). A written offer or contract takes precedence over these terms. Your own terms apply only if I confirm them in writing.</p>
+    <p>Consumers are persons who conclude the contract predominantly outside their commercial or professional activity (§ 1 of the Austrian Consumer Protection Act). Mandatory consumer rights always apply to them, even where these terms would say otherwise. For the right of withdrawal see <a href="{P("/widerruf/")}">Right of withdrawal</a>.</p>
+
+    <h2>2. Offer and conclusion of contract</h2>
+    <p>The packages and prices on my website and in my price list are guide prices (“from” prices). Only my written offer with a fixed price, scope, delivery time and payment plan is binding. It is valid for 14 days from its date unless it states otherwise. The contract is concluded when you accept the offer in writing. An email is enough.</p>
+
+    <h2>3. Services and process</h2>
+    <p>The scope is set out in the offer and in the package description. The process: intro call (free), concept for approval, implementation, handover. I do not build further without your approval of the concept. I decide myself which tools and working methods I use.</p>
+    <p>New content after approval of the concept, for example an additional subpage or a new section, is not a correction. You will receive a separate offer for it.</p>
+
+    <h2>4. Your cooperation and your content</h2>
+    <p>You supply texts, photos, logo and details completely and on time, and you approve the concept and the finished site. If this is delayed, the delivery time moves accordingly.</p>
+    <p>You assure me that you hold the necessary rights in the content you supply and that it does not infringe third-party rights, for example in photos, texts, trademarks or images of persons. Business clients indemnify me against third-party claims.</p>
+    <p>I do not give legal advice. You are responsible for the legal notice, privacy policy and other mandatory texts of your website. I build them in according to your details and point out gaps I notice. For a review I recommend legal advice or your professional association.</p>
+
+    <h2>5. Delivery time</h2>
+    <p>Details marked “approx.” are not binding. A binding date applies only if I confirm it in writing. The delivery time starts when the first payment and all necessary documents are with me. Force majeure and failures of third parties extend it by the duration of the disruption.</p>
+
+    <h2>6. Rounds of corrections</h2>
+    <p>The package price includes 2 rounds of corrections for the One-pager, 3 for the Business website, 4 for Premium and 3 for the Shop. A round is one collected list of change requests that you send at once. Requests beyond that you receive as a written offer with a fixed price; I do not bill by the hour. Errors on my side, for example broken links, display or function errors or deviations from approved texts, I always fix free of charge. They never count as a round.</p>
+
+    <h2>7. Prices and payment</h2>
+    <p>All prices are final prices. As a small business (§ 6 (1) no. 27 of the Austrian VAT Act) I do not charge VAT. Payment plan: One-pager and Business website 50 % on order and 50 % on completion; Premium and Shop 40 % at start, 30 % after approval of the concept and 30 % on completion. Invoices are payable within 14 days. In case of default, statutory default interest applies.</p>
+    <p>The domain always runs in your name, never in mine. Running fees for the domain and costs of payment providers or paid third-party licences are included in the package price only if the offer says so.</p>
+
+    <h2>8. Maintenance (hosting, updates, small changes)</h2>
+    <p>Maintenance covers hosting, updates and backups, an availability check, small changes and a quarterly check. The scope of small changes per month is set in the contract; beyond that you receive an offer. The price is payable monthly, starting at handover, and is added to the package price: Business website €60, Premium and Shop €80, optional €60 for the One-pager, “Aktiv” €150. A minimum term of 3 months applies; after that you can cancel at any time by email to the end of the current month.</p>
+    <p>After maintenance ends, you receive all files and access. The site can continue with a host of your choice; I help with the move on request by agreement. I strive for high availability but cannot guarantee it, especially not in case of outages at my host.</p>
+    <p>If, as part of maintenance, I process personal data of your customers, for example through a contact form, we conclude a data processing agreement under Art. 28 GDPR beforehand.</p>
+
+    <h2>9. Rights in the website</h2>
+    <p>Copyright remains with me. Upon full payment you receive the right, unlimited in time, territory and content, to use, change and operate the finished website for your business. Tools, building blocks and program parts that I use for several projects remain with me; you receive the right to use them for this website. Until full payment, the rights of use remain with me and I may withhold the handover.</p>
+    <p>I may show the finished website with name and link as a reference. With the introductory offer this is part of the consideration; otherwise only with your consent.</p>
+
+    <h2>10. Warranty and liability</h2>
+    <p>The statutory warranty rights apply. Business clients please report obvious defects within 14 days after handover. I am liable under the statutory provisions. Towards business clients I am not liable for slight negligence, except for personal injury. For lost profit and indirect damage I am liable towards business clients only for intent or gross negligence, and liability is limited in amount to the contract value. You are responsible for your content and its backup outside of maintenance.</p>
+
+    <h2>11. Withdrawal before completion</h2>
+    <p>If you withdraw from the contract before completion without my having given cause, you pay for the services provided up to then. I credit payments already made against this. Further statutory claims under § 1168 of the Austrian Civil Code remain unaffected. The consumer right of withdrawal is set out on the page <a href="{P("/widerruf/")}">Right of withdrawal</a>.</p>
+
+    <h2>12. Data protection</h2>
+    <p>How I process personal data is set out in the <a href="{P("/datenschutz/")}">privacy policy</a>.</p>
+
+    <h2>13. Dispute resolution for consumers</h2>
+    <p>I have not undertaken to take part in proceedings before a consumer arbitration body and am not legally obliged to do so. If we cannot settle a dispute, I will name the competent arbitration body in text form and state whether I will take part in proceedings (§ 19 (3) of the Austrian Alternative Dispute Resolution Act). The EU online dispute resolution platform was discontinued on 20 July 2025.</p>
+
+    <h2>14. Final provisions</h2>
+    <p>Austrian law applies, excluding its conflict-of-law rules and the UN Convention on Contracts for the International Sale of Goods. For consumers, mandatory consumer protection provisions of the state in which they habitually reside remain unaffected. For business clients the court with subject-matter jurisdiction for my registered office has jurisdiction; for consumers the statutory venue applies. Amendments and additions require written form; an email is enough. If a provision is invalid, the rest remains valid. The version that was on this page when the order was placed applies.</p>'''
+    return ("/en/terms/", "Terms and conditions",
+            "Terms and conditions for web design by Simon Monu: offer, process, rounds of corrections, payment, maintenance, rights, liability.",
+            _rechtsseite("Terms and conditions", "For web design, programming, hosting and maintenance by Simon Monu. A written offer takes precedence over these terms. For consumers the right of withdrawal applies in addition.",
+                         COURTESY.format(de="/agb/", name="AGB"), koerper, "As of: October 2026"),
+            {"og": "start", "robots": "noindex, follow"})
+
+
+def widerruf():
+    koerper = f'''
+    <h2>Who does this apply to?</h2>
+    <p>This right of withdrawal exists only for consumers, that is, persons who conclude the contract predominantly outside their commercial or professional activity (§ 1 of the Austrian Consumer Protection Act). Business clients do not have it.</p>
+
+    <h2>Withdrawal information</h2>
+    <p><strong>Right of withdrawal.</strong> You have the right to withdraw from this contract within 14 days without giving any reason. The withdrawal period is 14 days from the day of conclusion of the contract.</p>
+    <p>To exercise your right of withdrawal, you must inform me, Simon Monu, {_anschrift_zeile()}, email <a href="mailto:{MAIL}">{MAIL}</a>, of your decision to withdraw from this contract by an unequivocal statement (for example a letter sent by post or an email). You may use the attached model withdrawal form, but it is not obligatory. To meet the withdrawal deadline, it is sufficient for you to send your communication concerning your exercise of the right of withdrawal before the withdrawal period has expired.</p>
+    <p><strong>Effects of withdrawal.</strong> If you withdraw from this contract, I shall reimburse to you all payments received from you without undue delay and in any event not later than 14 days from the day on which I am informed about your decision to withdraw. I shall carry out such reimbursement using the same means of payment as you used for the initial transaction, unless you have expressly agreed otherwise. In any event, you will not incur any fees as a result of such reimbursement.</p>
+    <p>If you requested that the service begin during the withdrawal period, you shall pay me an amount which is in proportion to what has been provided until you have informed me of your withdrawal, in comparison with the full coverage of the contract.</p>
+    <p><strong>Early expiry.</strong> For a service contract, the right of withdrawal expires once I have fully performed the service, provided that performance began only after you had given your express consent and at the same time acknowledged that you lose your right of withdrawal once I have fully performed the contract.</p>
+
+    <h2>If you want me to start earlier</h2>
+    <p>I start before the withdrawal period has expired only if you expressly request it. To do so, you confirm the following sentence when accepting the offer. Without this express consent I start only after the withdrawal period has expired:</p>
+    <blockquote class="zitat-satz"><p>“I expressly request that Simon Monu begin the service before the withdrawal period has expired. I am aware that I lose my right of withdrawal once Simon Monu has fully performed the contract.”</p></blockquote>
+
+    <h2>Model withdrawal form</h2>
+    <p>If you want to withdraw from the contract, you can fill in this form and send it back to me.</p>
+    <ul>
+      <li>To Simon Monu, {_anschrift_zeile()}, email: <a href="mailto:{MAIL}">{MAIL}</a>:</li>
+      <li>I/We (*) hereby give notice that I/We (*) withdraw from my/our (*) contract for the provision of the following service (*):</li>
+      <li>Ordered on (*) / received on (*):</li>
+      <li>Name of consumer(s):</li>
+      <li>Address of consumer(s):</li>
+      <li>Signature of consumer(s) (only if this form is notified on paper):</li>
+      <li>Date:</li>
+    </ul>
+    <p class="klein">(*) Delete as appropriate.</p>
+
+    <h2>Outside of withdrawal</h2>
+    <p>For defects, the statutory warranty rights apply; I fix errors on my side free of charge. For a withdrawal without a right of withdrawal, section 11 of the <a href="{P("/agb/")}">Terms and conditions</a> applies.</p>'''
+    return ("/en/withdrawal/", "Right of withdrawal",
+            "Withdrawal information and model withdrawal form for consumers: 14-day right of withdrawal for contracts with Simon Monu.",
+            _rechtsseite("Right of withdrawal", "For consumers: you can withdraw from a contract with me within 14 days without giving any reason. Business clients do not have this right.",
+                         COURTESY.format(de="/widerruf/", name="Widerrufsrecht"), koerper, "As of: October 2026"),
             {"og": "start", "robots": "noindex, follow"})
 
 
@@ -642,7 +779,7 @@ def arbeiten():
 <section class="sek sek-hand" aria-labelledby="h-hand"><div class="wrap">
   <h2 id="h-hand" class="t-l">Four distinct styles</h2>
   <p class="lead">Four sites, four jobs, four looks. My proof that I do not build from a template.</p>
-  <div class="tab-wrap"><table class="tabelle"><caption>Base colour, typefaces and character of the four sites</caption>
+  <div class="tab-wrap" tabindex="0" role="region" aria-label="Base colour, typefaces and character of the four sites"><table class="tabelle"><caption>Base colour, typefaces and character of the four sites</caption>
   <thead><tr><th scope="col">Site</th><th scope="col">Ground</th><th scope="col">Typefaces</th><th scope="col">Colour</th><th scope="col">Tone</th></tr></thead>
   <tbody>{zeilen}</tbody></table></div>
 </div></section>
@@ -704,4 +841,4 @@ def case_lindtner():
 
 def alle():
     return [startseite(), leistungen(), handwerk(), ueber_mich(), kontakt(), danke(), impressum(), datenschutz(),
-            arbeiten(), case_nickmonu(), case_hallwirth(), case_lindtner()]
+            cookies(), agb(), widerruf(), arbeiten(), case_nickmonu(), case_hallwirth(), case_lindtner()]

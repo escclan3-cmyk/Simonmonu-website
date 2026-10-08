@@ -123,12 +123,12 @@ def startseite():
     p = PAKETE
     einf = ""
     if EINFUEHRUNG:
-        einf = (f'<p class="einfuehrung">Für die ersten Projekte gilt ein Einführungspreis: Onepager ab {eur(p[0]["einf"])}, Business-Website ab {eur(p[1]["einf"])}. '
+        einf = (f'<p class="einfuehrung">Einführungsangebot {einf_bedingung()}: Onepager ab {eur(p[0]["einf"])}, Business-Website ab {eur(p[1]["einf"])}. '
                 'Gleiche Arbeit, gleicher Umfang. Dafür darf ich Ihre fertige Seite als Referenz zeigen.</p>')
     hero = f'''<div class="wrap hero-innen">
   <h1 id="h1" class="hero-titel"><span class="h1-dach">Webdesign in Wien und Salzburg</span>Jede Website<br> ein Einzelstück.</h1>
   <div class="hero-text">
-    <p class="lead">Ich entwerfe und programmiere Websites für Betriebe, Selbstständige und Marken in Wien und Salzburg. Ohne Baukasten, ohne Vorlage, jede Zeile selbst geschrieben.</p>
+    <p class="lead">Ich entwerfe und programmiere Websites für Betriebe, Selbstständige und Marken in Wien und Salzburg. Ohne Baukasten, ohne Vorlage: individuell entworfen und entwickelt.</p>
     <p class="knoepfe">{knopf("Arbeiten ansehen", "#arbeiten")} {textlink("Preise ab " + eur(p[0]["ab"]), "/leistungen/")}</p>
   </div>
 </div>'''
@@ -171,7 +171,7 @@ def startseite():
   <h2 id="h-ueber" class="statement">Ihr Webdesigner für Wien und Salzburg, vom ersten Gespräch bis zur Übergabe.</h2>
   <div class="ueber-text">
     <p>Ich bin Simon Monu und arbeite allein, seit Herbst 2026 mit eigenem Gewerbe. Mein erstes Projekt ist nickmonu.com, die Website meines Vaters. Sie ist bis Fassung {FASSUNG} gewachsen, weil ich nach jeder Rückmeldung nachgebessert habe.</p>
-    <p>Jede Seite baue ich selbst in Code, und auf Ihre Nachricht antworte ich selbst.</p>
+    <p>Jede Seite entwickle ich individuell in Code, und auf Ihre Nachricht antworte ich persönlich.</p>
     <p class="ueber-link">{textlink("Mehr über mich", "/ueber-mich/")}</p>
   </div>
 </div>'''
@@ -217,9 +217,9 @@ def leistungen():
     if EINFUEHRUNG:
         einf = f'''<section class="sek sek-einf" aria-labelledby="h-einf"><div class="wrap raster">
   <div class="einf-text">
-    <h2 id="h-einf" class="t-l">Einführungsangebot für die ersten Projekte.</h2>
+    <h2 id="h-einf" class="t-l">Einführungsangebot für meine ersten {EINF_ANZAHL} Aufträge.</h2>
     <p class="lead">Onepager ab {eur(p[0]["einf"])} statt ab {eur(p[0]["ab"])}. Business-Website ab {eur(p[1]["einf"])} statt ab {eur(p[1]["ab"])}. Gleiche Arbeit, gleicher Umfang.</p>
-    <p>Dafür darf ich Ihre fertige Seite als Referenz zeigen. Wie lange das Angebot gilt, frage ich Sie gern im Erstgespräch: Es ist zeitlich begrenzt und gilt für die ersten Projekte.</p>
+    <p>Dafür darf ich Ihre fertige Seite als Referenz zeigen. Das Angebot gilt {einf_bedingung()}, die Betreuung bleibt davon unberührt. Ob noch einer der {EINF_ANZAHL} Plätze frei ist, sage ich Ihnen im Erstgespräch.</p>
   </div>
 </div></section>'''
     zus = "".join(f"<tr><td>{e(t)}</td><td class=\"preis-spalte\">{pr}</td></tr>" for t, pr in ZUSATZ)
@@ -249,13 +249,14 @@ def leistungen():
 {einf}
 <section class="sek sek-zusatz" aria-labelledby="h-zusatz"><div class="wrap">
   <h2 id="h-zusatz" class="t-l">Zusatzleistungen</h2>
-  <div class="tab-wrap"><table class="tabelle"><caption>Preise als Endpreise, ohne Umsatzsteuerausweis</caption><thead><tr><th scope="col">Leistung</th><th scope="col">Preis</th></tr></thead><tbody>{zus}</tbody></table></div>
-  <p class="klein">Ab der Business-Website aufwärts gehört die laufende Betreuung fix zum Paket. Nur beim Onepager ist sie optional zubuchbar.</p>
+  <p class="klein">{ZUSATZ_HINWEIS}</p>
+  <div class="tab-wrap" tabindex="0" role="region" aria-label="Zusatzleistungen und Preise"><table class="tabelle"><caption>Preise als Endpreise, ohne Umsatzsteuerausweis</caption><thead><tr><th scope="col">Leistung</th><th scope="col">Preis</th></tr></thead><tbody>{zus}</tbody></table></div>
+  <p class="klein">Ab der Business-Website aufwärts kommt die Betreuung zum Paketpreis dazu (zzgl. 60 bzw. 80 €/Monat, mindestens 3 Monate), damit Ihre Seite von Anfang an gepflegt ist. Nur beim Onepager ist sie optional zubuchbar. Rechenbeispiel Business-Website: 2.400 € einmalig plus 3 × 60 € ergibt mindestens 2.580 € für den Bau und die ersten drei Monate.</p>
 </div></section>
 <section class="sek sek-betreuung" aria-labelledby="h-betreuung"><div class="wrap raster">
   <div class="betreuung-text">
     <h2 id="h-betreuung" class="t-l">Was in der Betreuung steckt.</h2>
-    <p class="lead">Business-Website ab 60 €/Monat, Premium und Shop ab 80 €/Monat. Mindestlaufzeit 3 Monate, danach monatlich kündbar.</p>
+    <p class="lead">Business-Website 60 €/Monat, Premium und Shop 80 €/Monat, beim Onepager optional 60 €/Monat. Mindestlaufzeit 3 Monate, danach monatlich kündbar. Dieser Betrag kommt zum Paketpreis dazu.</p>
   </div>
   <ul class="betreuung-liste">{bet}</ul>
 </div></section>
@@ -305,7 +306,7 @@ def handwerk():
         ("Ihre Leistungen mit Richtpreis.", "Damit niemand anrufen muss, um zu erfahren, ob es überhaupt passt."),
         ("Fotos Ihrer Arbeit.", "Von echten Aufträgen. Sie liefern die Fotos, ich mache sie schnell und scharf."),
         ("Am Handy zuerst gebaut.", "Dort schaut die Kundschaft zuerst hin, also fängt der Entwurf dort an."),
-        ("Google-Unternehmensprofil.", "Über das SEO-Basis-Setup (250–400 €) richte ich Ihren Eintrag ein, damit man Sie auch in der Karte findet."),
+        ("Google-Unternehmensprofil.", "Über das SEO-Setup (250–400 €) richte ich Ihren Google-Unternehmensprofil-Eintrag ein, damit man Sie auch in der Karte findet."),
     ]
     dh = "".join(f"<li><strong>{e(t)}</strong> {e(x)}</li>" for t, x in drin)
     einf1 = f'Einführung ab {eur(p[0]["einf"])}' if EINFUEHRUNG else ""
@@ -313,7 +314,7 @@ def handwerk():
     faq = [
         ("Was muss ich liefern?", "Fotos Ihrer Arbeit, Stichworte zu Ihren Leistungen und zwei Freigaben: eine für das Konzept, eine für die fertige Seite. Den Rest übernehme ich."),
         ("Wer schreibt die Texte?", "Wenn Sie keine Zeit zum Schreiben haben, schreibe ich sie für 60–90 € je Unterseite. Sie geben sie frei."),
-        ("Was kostet es im Monat?", "Beim Onepager nichts, die Betreuung ist dort optional. Bei der Business-Website gehört die Betreuung ab 60 €/Monat dazu, mindestens 3 Monate, danach monatlich kündbar."),
+        ("Was kostet es im Monat?", "Beim Onepager nichts, die Betreuung ist dort optional (60 €/Monat). Bei der Business-Website kommen 60 €/Monat für die Betreuung zum Paketpreis dazu, mindestens 3 Monate, danach monatlich kündbar."),
         ("Gehört mir die Domain?", "Ja. Die Domain läuft immer auf Ihren Namen, nie auf meinen. Sie bekommen alle Zugänge."),
     ]
     fq = "".join(f'<details class="faq"><summary><span>{e(f)}</span></summary><p>{e(a)}</p></details>' for f, a in faq)
@@ -400,7 +401,7 @@ def ueber_mich():
   <div class="text-spalte">
     <p>Ich baue ohne Baukasten und ohne Vorlage. Das hat Folgen für Sie: Die Seite lädt schnell, weil nichts drauf ist, was sie nicht braucht: Diese hier besteht beim ersten Aufruf aus <span data-live-n>@@N@@</span> Dateien mit zusammen <span data-live-kb>@@KB@@</span> KB. Sie setzt keine Cookies. Und sie gehört Ihnen, samt Domain und Zugängen.</p>
     <p>Wie das aussieht, zeigt ein Ausschnitt aus meinem eigenen Generator. Diese Warnung gibt er aus, wenn im Impressum die Anschrift fehlt:</p>
-    <figure class="code"><pre><code>def anschrift_fehlt():
+    <figure class="code"><pre tabindex="0" role="region" aria-label="Codeausschnitt"><code>def anschrift_fehlt():
     return not (ANSCHRIFT["strasse"] and ANSCHRIFT["plz"])
 
 # in bau.py
@@ -514,9 +515,10 @@ def impressum():
 
     <h2>Urheberrecht</h2>
     <p>Texte, Gestaltung und Programmierung dieser Website sind urheberrechtlich geschützt. Die gezeigten Arbeiten (nickmonu.com und die beiden Konzept-Demos) gehören ihren jeweiligen Inhabern beziehungsweise sind ausdrücklich als erfundene Demos gekennzeichnet.</p>
+    <p>Bildnachweise: In der Kopie von nickmonu.com stammen die Fotos von Joachim Bergauer und S. Monu (je © bei den Urhebern). Die Symbolfotos in den beiden Konzept-Demos stammen von Unsplash und Pexels und stehen unter deren Lizenzen. Die Urheber stehen bei den Bildern in den Demos. Die Porträts dort zeigen nicht die erfundenen Personen.</p>
 
     <h2>Schriften</h2>
-    <p>Schibsted Grotesk unter der SIL Open Font License 1.1. Die Schrift liegt auf diesem Server.</p>
+    <p>Schibsted Grotesk und Fragment Mono unter der SIL Open Font License 1.1. Die Schriften liegen auf diesem Server.</p>
 
     <h2>Haftung für Links</h2>
     <p>Für die Inhalte verlinkter Websites sind ausschließlich deren Betreiber verantwortlich. Zum Zeitpunkt der Verlinkung waren keine rechtswidrigen Inhalte erkennbar. Werden solche bekannt, entferne ich den Link umgehend.</p>
@@ -527,56 +529,191 @@ def impressum():
     return ("/impressum/", "Impressum", "Impressum und Offenlegung von simonmonu.at.", inhalt, {"og": "start", "robots": "noindex, follow"})
 
 
+def _rechtsseite(h1, lead, koerper, stand):
+    return f'''<section class="sek rechtstext" aria-labelledby="h1"><div class="wrap raster">
+  <div class="rechtstext-innen">
+    <h1 id="h1" class="t-xl">{h1}</h1>
+    <p class="lead">{lead}</p>
+{koerper}
+    <p class="stand klein">{stand}</p>
+  </div>
+</div></section>'''
+
+
 def datenschutz():
     if FORMSPREE:
-        form = ('<p>Für die Zustellung nutze ich den Dienst Formspree (Formspree, Inc., USA). Formspree nimmt die Formulardaten entgegen und leitet sie per E-Mail an mich weiter. '
-                'Die Übermittlung in die USA erfolgt auf Grundlage der EU-Standardvertragsklauseln (Art. 46 Abs. 2 lit. c DSGVO). Wenn Sie das nicht möchten, schreiben Sie mir einfach direkt eine E-Mail.</p>\n'
-                '    <p>Steht die Zustellung über Formspree nicht zur Verfügung, öffnet das Formular stattdessen Ihr E-Mail-Programm mit einer vorbereiteten Nachricht. Dann gehen die Daten über Ihren eigenen E-Mail-Anbieter direkt an mich.</p>')
+        form = f'''<p>Wenn Sie das Formular absenden, verarbeite ich Ihren Namen, Ihre E-Mail-Adresse und Ihre Nachricht sowie, wenn Sie es angeben, Betrieb oder Projekt und Paketwunsch. Name, E-Mail-Adresse und Nachricht sind Pflichtfelder, weil ich Ihnen sonst nicht antworten kann. Alles andere ist freiwillig. Ich speichere außerdem, dass Sie der Übermittlung zugestimmt haben.</p>
+    <p>Zweck ist, Ihre Anfrage zu beantworten und Ihnen ein Angebot zu machen. Rechtsgrundlage ist die Durchführung vorvertraglicher Maßnahmen auf Ihre Anfrage (Art. 6 Abs. 1 lit. b DSGVO).</p>
+    <p>Für die Zustellung nutze ich den Dienst Formspree (Formspree, Inc., USA). Formspree nimmt die Formulardaten entgegen, speichert sie und leitet sie per E-Mail an mich weiter. Formspree sitzt in den USA. Nach eigenen Angaben stützt Formspree Übermittlungen aus der EU auf die Standardvertragsklauseln der EU-Kommission. Zusätzlich übermittle ich Ihre Angaben nur, wenn Sie im Formular ausdrücklich zustimmen (Art. 49 Abs. 1 lit. a DSGVO). Dabei besteht das Risiko, dass Behörden in den USA auf die Daten zugreifen und Ihre Rechte dort schwerer durchzusetzen sind als in der EU. Sie können Ihre Einwilligung jederzeit mit Wirkung für die Zukunft widerrufen, eine E-Mail an <a href="mailto:{MAIL}">{MAIL}</a> genügt. Wenn Sie nicht zustimmen möchten, schreiben Sie mir einfach direkt eine E-Mail.</p>
+    <p>Steht die Zustellung über Formspree nicht zur Verfügung, öffnet das Formular stattdessen Ihr E-Mail-Programm mit einer vorbereiteten Nachricht. Dann gehen die Daten über Ihren eigenen E-Mail-Anbieter direkt an mich.</p>'''
     else:
         form = '<p>Das Formular öffnet Ihr E-Mail-Programm mit einer vorbereiteten Nachricht. Die Daten gehen dann über Ihren eigenen E-Mail-Anbieter direkt an mich. Es gibt keinen zwischengeschalteten Formulardienst.</p>'
-    inhalt = f'''<section class="sek rechtstext" aria-labelledby="h1"><div class="wrap raster">
-  <div class="rechtstext-innen">
-    <h1 id="h1" class="t-xl">Datenschutz</h1>
-    <p class="lead">Kurz gesagt: Diese Website setzt keine Cookies, zählt keine Besucher und bindet nichts von Dritten ein.</p>
-
+    tel = f' Telefon: <a href="{telefon_href()}">{e(TELEFON)}</a>.' if TELEFON else ""
+    koerper = f'''
     <h2>Verantwortlich</h2>
-    <p>Simon Monu, {_anschrift_zeile()}. Für alle Fragen zum Datenschutz genügt eine E-Mail an <a href="mailto:{MAIL}">{MAIL}</a>.</p>
+    <p>Simon Monu, {_anschrift_zeile()}. E-Mail: <a href="mailto:{MAIL}">{MAIL}</a>.{tel} Für alle Fragen zum Datenschutz genügt eine E-Mail.</p>
 
-    <h2>Beim Aufruf der Website</h2>
-    <p>Die Website wird über Cloudflare ausgeliefert (Cloudflare, Inc., USA, mit Servern auch in der EU), das in meinem Auftrag als Hoster und Auslieferungsnetzwerk arbeitet (Auftragsverarbeitung nach Art. 28 DSGVO). Dabei verarbeitet der Server technisch notwendige Zugriffsdaten: IP-Adresse, Datum und Uhrzeit, aufgerufene Seite, Browser und Betriebssystem. Das ist nötig, um die Seite auszuliefern und Angriffe abzuwehren. Rechtsgrundlage ist mein berechtigtes Interesse an einem sicheren Betrieb (Art. 6 Abs. 1 lit. f DSGVO).</p>
+    <h2>Beim Aufruf der Website (Hosting)</h2>
+    <p>Diese Website liegt bei GitHub Pages (GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA). Wenn Sie eine Seite aufrufen, verarbeitet GitHub technisch notwendige Zugriffsdaten, vor allem Ihre IP-Adresse sowie Datum und Uhrzeit, die aufgerufene Seite, Ihren Browser und Ihr Betriebssystem. Nach Angaben von GitHub wird die IP-Adresse von Besuchern aus Sicherheitsgründen gespeichert, auch wenn Sie kein GitHub-Konto haben. Zu Auslieferungsnetzwerk, Speicherdauer und Verantwortlichkeit von GitHub gilt dessen <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener" target="_blank">Datenschutzerklärung</a>. Ich selbst werte diese Zugriffsdaten nicht aus.</p>
+    <p>Zweck ist, die Seite auszuliefern und sicher und stabil zu betreiben. Rechtsgrundlage ist mein berechtigtes Interesse daran (Art. 6 Abs. 1 lit. f DSGVO). GitHub hat seinen Sitz in den USA. Nach seiner Datenschutzerklärung stützt GitHub Übermittlungen aus dem Europäischen Wirtschaftsraum auf die Standardvertragsklauseln der EU-Kommission (Art. 46 Abs. 2 lit. c DSGVO).</p>
 
     <h2>Keine Cookies, keine Statistik</h2>
-    <p>Es gibt keine Cookies, keine Besucherzählung, keine Werbe- oder Analysedienste.</p>
-    <p>Diese Website legt bis zu zwei Angaben in Ihrem Browser ab, die Ihr Gerät nie verlassen und nicht ausgewertet werden:</p>
-    <ul>
-      <li>Im Sitzungsspeicher (sessionStorage) einen Merker „sm-intro“, damit die kurze Startansicht nur einmal pro Besuch läuft.</li>
-      <li>Im lokalen Speicher (localStorage) einen Eintrag „sm-theme“, falls Sie die Darstellung auf hell oder dunkel umstellen.</li>
-    </ul>
-    <p>Die eingebetteten Arbeiten liegen auf demselben Server. Zwei davon merken sich ebenso im Sitzungsspeicher, dass ihre Startansicht schon gelaufen ist: die Kopie von nickmonu.com („nm-eintritt“) und die Demo Vera Lindtner („vl-intro“). Das Formular in der nickmonu-Kopie sendet nichts.</p>
-    <p>Sie dienen nur dazu, die von Ihnen aufgerufene Website wie von Ihnen gewünscht anzuzeigen. Deshalb sind sie nach § 165 Abs. 3 Telekommunikationsgesetz 2021 ohne Einwilligung zulässig. Die Sitzungsmerker verschwinden, wenn Sie den Tab schließen.</p>
-    <p>Die Startansicht liest aus Ihrem Browser aus, welche Dateien dieser Seite wie groß sind, und zeigt sie an. Das passiert nur auf Ihrem Gerät. Es wird nichts an mich oder Dritte gesendet.</p>
+    <p>Es gibt keine Cookies, keine Besucherzählung, keine Werbe- und keine Analysedienste. Diese Website legt bis zu zwei Angaben in Ihrem Browser ab, die Ihr Gerät nie verlassen und nicht ausgewertet werden: im Sitzungsspeicher einen Merker „sm-intro“, damit die kurze Startansicht nur einmal pro Besuch läuft, und im lokalen Speicher einen Eintrag „sm-theme“, falls Sie die Darstellung auf hell oder dunkel umstellen. Die eingebetteten Arbeiten legen je einen weiteren Sitzungsmerker an. Alle Angaben mit Zweck und Dauer stehen auf der Seite <a href="{P("/cookies/")}">Cookies und Speicher</a>. Deshalb ist kein Cookie-Banner nötig (§ 165 Abs. 3 Telekommunikationsgesetz 2021).</p>
+    <p>Die Startansicht liest aus Ihrem Browser aus, welche Dateien dieser Seite wie groß sind, und zeigt sie an. Das passiert nur auf Ihrem Gerät. Es wird nichts an mich oder an Dritte gesendet.</p>
 
     <h2>Schriften</h2>
     <p>Die Schriften liegen auf demselben Server wie die Website. Es besteht keine Verbindung zu Google Fonts oder einem anderen Schriftdienst.</p>
 
     <h2>Anfrageformular</h2>
-    <p>Wenn Sie das Formular absenden, werden Ihre Angaben verarbeitet: Name, E-Mail-Adresse, auf Wunsch Betrieb oder Projekt, Paketwunsch und Ihre Nachricht. Ich nutze sie ausschließlich, um Ihre Anfrage zu beantworten. Rechtsgrundlage ist die Anbahnung eines Vertrags (Art. 6 Abs. 1 lit. b DSGVO). Ich lösche die Daten, sobald die Anfrage erledigt ist und keine gesetzlichen Aufbewahrungspflichten entgegenstehen.</p>
     {form}
 
-    <h2>E-Mail</h2>
-    <p>Wenn Sie mir schreiben, verarbeite ich Ihre Nachricht und Ihre Adresse, um zu antworten (Art. 6 Abs. 1 lit. b oder f DSGVO), und lösche sie, wenn die Sache erledigt ist und keine Aufbewahrungspflichten bestehen.</p>
+    <h2>E-Mail und Telefon</h2>
+    <p>Wenn Sie mir schreiben oder mich anrufen, verarbeite ich Ihre E-Mail-Adresse, Ihre Nachricht und gegebenenfalls Ihre Telefonnummer, um zu antworten (Art. 6 Abs. 1 lit. b oder f DSGVO). Meine E-Mails liegen bei meinem E-Mail-Anbieter.</p>
 
-    <h2>Links zu anderen Websites</h2>
-    <p>Links zu nickmonu.com und anderen Seiten sind gewöhnliche Links. Erst wenn Sie einen anklicken, verlassen Sie diese Website; dort gilt die Datenschutzerklärung des jeweiligen Anbieters.</p>
+    <h2>Wie lange ich Daten aufbewahre</h2>
+    <p>Kommt kein Vertrag zustande, lösche ich Ihre Anfrage spätestens sechs Monate nach der letzten Nachricht, auch bei Formspree. Kommt ein Vertrag zustande, bewahre ich die Unterlagen so lange auf, wie das Gesetz es verlangt (derzeit sieben Jahre, § 132 Bundesabgabenordnung), und lösche sie danach.</p>
+
+    <h2>Weitergabe, automatisierte Entscheidungen</h2>
+    <p>Ich gebe Ihre Daten nur weiter, wenn das für Ihre Anfrage nötig ist (Formspree, mein E-Mail-Anbieter) oder das Gesetz es verlangt. Es gibt keine automatisierte Entscheidungsfindung und kein Profiling.</p>
+
+    <h2>Eingebettete Arbeiten und Links</h2>
+    <p>Die Arbeiten unter „Arbeiten“ laufen im selben Fenster und liegen auf demselben Server. Die Formulare der Arbeiten senden nichts: Die Demos zeigen nur eine Demo-Meldung, das Formular in der Kopie von nickmonu.com verweist auf die Originalseite. Links zu nickmonu.com und anderen Seiten sind gewöhnliche Links. Erst wenn Sie einen anklicken, verlassen Sie diese Website. Dort gilt die Datenschutzerklärung des jeweiligen Anbieters.</p>
 
     <h2>Ihre Rechte</h2>
-    <p>Sie haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch. Eine erteilte Einwilligung können Sie jederzeit widerrufen. Eine E-Mail an <a href="mailto:{MAIL}">{MAIL}</a> genügt.</p>
-    <p>Außerdem können Sie sich bei der Österreichischen Datenschutzbehörde beschweren: Barichgasse 40–42, 1030 Wien, <a href="https://www.dsb.gv.at" rel="noopener" target="_blank">dsb.gv.at</a>.</p>
+    <p>Sie haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch, besonders gegen Verarbeitungen auf Grundlage berechtigter Interessen (Art. 21 DSGVO). Eine erteilte Einwilligung können Sie jederzeit widerrufen. Eine E-Mail an <a href="mailto:{MAIL}">{MAIL}</a> genügt.</p>
+    <p>Außerdem können Sie sich bei der Österreichischen Datenschutzbehörde beschweren: Barichgasse 40–42, 1030 Wien, <a href="https://www.dsb.gv.at" rel="noopener" target="_blank">dsb.gv.at</a>.</p>'''
+    return ("/datenschutz/", "Datenschutz",
+            "Datenschutzerklärung von simonmonu.at: keine Cookies, keine Statistik, Hosting bei GitHub Pages, Formular über Formspree.",
+            _rechtsseite("Datenschutz", "Kurz gesagt: Diese Website setzt keine Cookies, zählt keine Besucher und bindet nichts von Dritten ein. Der Hoster GitHub speichert beim Aufruf technisch bedingt Ihre IP-Adresse. Wenn Sie das Formular nutzen, läuft Ihre Nachricht über den Dienst Formspree.",
+                         koerper, "Stand: Oktober 2026"),
+            {"og": "start", "robots": "noindex, follow"})
 
-    <p class="stand klein">Stand: September 2026</p>
-  </div>
-</div></section>'''
-    return ("/datenschutz/", "Datenschutz", "Datenschutzerklärung von simonmonu.at: keine Cookies, keine Statistik, keine Dienste von Dritten.", inhalt,
+
+def cookies():
+    tab = '''<div class="tab-wrap" tabindex="0" role="region" aria-label="Tabelle der Browser-Speicher"><table class="tabelle tabelle-speicher"><caption>Alle Einträge, die diese Website und ihre eingebetteten Arbeiten im Browser ablegen</caption>
+      <thead><tr><th scope="col">Name</th><th scope="col">Art</th><th scope="col">Zweck</th><th scope="col">Dauer</th></tr></thead>
+      <tbody>
+      <tr><th scope="row">sm-theme</th><td>localStorage</td><td>Merkt sich Ihre Wahl hell, dunkel oder System, wenn Sie die Darstellung umstellen.</td><td>bis Sie wieder auf „System“ stellen</td></tr>
+      <tr><th scope="row">sm-intro</th><td>sessionStorage</td><td>Sorgt dafür, dass die kurze Startansicht nur einmal pro Besuch läuft.</td><td>bis Sie den Tab schließen</td></tr>
+      <tr><th scope="row">nm-eintritt</th><td>sessionStorage</td><td>Nur in der Kopie von nickmonu.com unter „Arbeiten“: Startansicht einmal pro Besuch.</td><td>bis Sie den Tab schließen</td></tr>
+      <tr><th scope="row">vl-intro</th><td>sessionStorage</td><td>Nur in der Demo Vera Lindtner: Startansicht einmal pro Besuch.</td><td>bis Sie den Tab schließen</td></tr>
+      </tbody></table></div>'''
+    koerper = f'''
+    <h2>Cookies</h2>
+    <p>Diese Website setzt keine Cookies. Es gibt auch keine Dienste von Dritten, die Cookies setzen würden: keine Statistik, keine Werbung, keine Karten, keine eingebetteten Videos, keine fremden Schriften.</p>
+
+    <h2>Browser-Speicher</h2>
+    <p>Im Browser legt die Website höchstens die folgenden Einträge ab. Sie enthalten keine personenbezogenen Daten, werden nicht ausgewertet und verlassen Ihr Gerät nie.</p>
+    {tab}
+
+    <h2>Rechtsgrundlage</h2>
+    <p>Die Einträge dienen allein dazu, die von Ihnen aufgerufene Website wie vorgesehen anzuzeigen. Sie sind für den von Ihnen ausdrücklich gewünschten Dienst technisch erforderlich oder gehen auf Ihre eigene Wahl zurück. Deshalb ist nach § 165 Abs. 3 Telekommunikationsgesetz 2021 keine Einwilligung nötig, und es gibt kein Cookie-Banner.</p>
+
+    <h2>Was Sie tun können</h2>
+    <p>Sie können den Browser-Speicher jederzeit in den Einstellungen Ihres Browsers löschen oder sperren. Die Website funktioniert auch dann. Die Startansicht läuft dann bei jedem Seitenwechsel, und Ihre Wahl von hell oder dunkel wird nicht gemerkt.</p>
+
+    <h2>Mehr zum Datenschutz</h2>
+    <p>Wie Zugriffsdaten beim Hoster und Angaben im Anfrageformular verarbeitet werden, steht in der <a href="{P("/datenschutz/")}">Datenschutzerklärung</a>.</p>'''
+    return ("/cookies/", "Cookies und Speicher",
+            "Cookies und Browser-Speicher auf simonmonu.at: keine Cookies, höchstens vier Browser-Einträge, kein Cookie-Banner nötig.",
+            _rechtsseite("Cookies und Speicher", "Diese Website setzt keine Cookies. Deshalb gibt es hier kein Cookie-Banner. Diese Seite zeigt, was im Browser abgelegt wird, wozu und wie lange.",
+                         koerper, "Stand: Oktober 2026"),
+            {"og": "start", "robots": "noindex, follow"})
+
+
+def agb():
+    koerper = f'''
+    <h2>1. Geltung</h2>
+    <p>Diese Bedingungen gelten für alle Verträge über Webdesign, Programmierung, Hosting und Betreuung zwischen Simon Monu, {_anschrift_zeile()} („ich“), und Ihnen als Auftraggeberin oder Auftraggeber („Sie“). Ein schriftliches Angebot oder ein Vertrag geht diesen Bedingungen vor. Abweichende Bedingungen von Ihnen gelten nur, wenn ich sie schriftlich bestätige.</p>
+    <p>Verbraucher sind Personen, die den Vertrag überwiegend außerhalb ihrer gewerblichen oder beruflichen Tätigkeit abschließen (§ 1 Konsumentenschutzgesetz). Für sie gelten zwingende Verbraucherrechte immer, auch wenn diese Bedingungen etwas anderes sagen würden. Zum Rücktrittsrecht siehe <a href="{P("/widerruf/")}">Widerrufsrecht</a>.</p>
+
+    <h2>2. Angebot und Vertragsabschluss</h2>
+    <p>Die Pakete und Preise auf meiner Website und in meiner Preisliste sind Richtpreise („ab“-Preise). Verbindlich ist erst mein schriftliches Angebot mit Festpreis, Umfang, Lieferzeit und Zahlungsplan. Es gilt 14 Tage ab seinem Datum, wenn nichts anderes darin steht. Der Vertrag kommt zustande, wenn Sie das Angebot schriftlich annehmen. Eine E-Mail genügt.</p>
+
+    <h2>3. Leistungen und Ablauf</h2>
+    <p>Der Umfang steht im Angebot und in der Paketbeschreibung. Der Ablauf: Erstgespräch (kostenlos), Konzept zur Freigabe, Umsetzung, Übergabe. Ohne Ihre Freigabe des Konzepts baue ich nicht weiter. Welche Werkzeuge und Arbeitsweise ich einsetze, entscheide ich selbst.</p>
+    <p>Neue Inhalte nach der Freigabe des Konzepts, zum Beispiel eine zusätzliche Unterseite oder ein neuer Bereich, sind keine Korrektur. Dafür bekommen Sie ein eigenes Angebot.</p>
+
+    <h2>4. Ihre Mitwirkung und Ihre Inhalte</h2>
+    <p>Sie liefern Texte, Fotos, Logo und Angaben vollständig und rechtzeitig und geben Konzept und fertige Seite frei. Verzögert sich das, verschiebt sich die Lieferzeit entsprechend.</p>
+    <p>Sie versichern, dass Sie an den gelieferten Inhalten die nötigen Rechte haben und dass sie keine Rechte Dritter verletzen, etwa an Fotos, Texten, Marken oder Bildern von Personen. Unternehmer halten mich bei Ansprüchen Dritter schad- und klaglos.</p>
+    <p>Ich berate nicht rechtlich. Impressum, Datenschutzerklärung und andere Pflichttexte Ihrer Website verantworten Sie. Ich baue sie nach Ihren Angaben ein und weise auf Lücken hin, die mir auffallen. Für eine Prüfung empfehle ich Rechtsberatung oder Ihre Interessenvertretung.</p>
+
+    <h2>5. Lieferzeit</h2>
+    <p>Angaben mit „ca.“ sind unverbindlich. Ein verbindlicher Termin gilt nur, wenn ich ihn schriftlich zusage. Die Lieferzeit beginnt, wenn die erste Zahlung und alle nötigen Unterlagen bei mir sind. Höhere Gewalt und Ausfälle von Dritten verlängern sie um die Dauer der Störung.</p>
+
+    <h2>6. Korrekturrunden</h2>
+    <p>Im Paketpreis enthalten sind beim Onepager 2, bei der Business-Website 3, bei Premium 4 und beim Shop 3 Korrekturrunden. Eine Runde ist eine gesammelte Liste mit Änderungswünschen, die Sie auf einmal schicken. Wünsche darüber hinaus bekommen Sie als schriftliches Angebot mit Festpreis, ich rechne nicht nach Stunden ab. Fehler auf meiner Seite, etwa defekte Links, Darstellungs- oder Funktionsfehler oder Abweichungen von freigegebenen Texten, behebe ich immer kostenlos. Sie zählen nie als Runde.</p>
+
+    <h2>7. Preise und Zahlung</h2>
+    <p>Alle Preise sind Endpreise. Als Kleinunternehmer (§ 6 Abs. 1 Z 27 UStG) verrechne ich keine Umsatzsteuer. Zahlungsplan: Onepager und Business-Website 50 % bei Auftragserteilung und 50 % bei Fertigstellung, Premium und Shop 40 % bei Start, 30 % nach Konzept-Freigabe und 30 % bei Fertigstellung. Rechnungen sind innerhalb von 14 Tagen zu bezahlen. Bei Verzug gelten die gesetzlichen Verzugszinsen.</p>
+    <p>Die Domain läuft immer auf Ihren Namen, nie auf meinen. Laufende Gebühren der Domain und Kosten von Zahlungsanbietern oder kostenpflichtigen Lizenzen Dritter sind im Paketpreis nur enthalten, wenn das Angebot es sagt.</p>
+
+    <h2>8. Betreuung (Hosting, Updates, kleine Änderungen)</h2>
+    <p>Die Betreuung umfasst Hosting, Updates und Sicherung, eine Erreichbarkeits-Prüfung, kleine Änderungen und einen Quartalscheck. Der Umfang der kleinen Änderungen pro Monat steht im Vertrag, darüber hinaus bekommen Sie ein Angebot. Der Preis ist monatlich zu zahlen, beginnend mit der Übergabe, und kommt zum Paketpreis dazu: Business-Website 60 €, Premium und Shop 80 €, beim Onepager optional 60 €, „Aktiv“ 150 €. Es gilt eine Mindestlaufzeit von 3 Monaten, danach können Sie jederzeit zum Ende des laufenden Monats per E-Mail kündigen.</p>
+    <p>Nach Ende der Betreuung bekommen Sie alle Dateien und Zugänge. Die Seite kann bei einem Hoster Ihrer Wahl weiterlaufen, beim Umzug helfe ich auf Wunsch nach Vereinbarung. Ich bemühe mich um hohe Erreichbarkeit, kann sie aber nicht garantieren, besonders nicht bei Ausfällen meines Hosters.</p>
+    <p>Verarbeite ich im Rahmen der Betreuung personenbezogene Daten Ihrer Kundschaft, etwa über ein Kontaktformular, schließen wir dafür vorab einen Auftragsverarbeitungsvertrag nach Art. 28 DSGVO.</p>
+
+    <h2>9. Rechte an der Website</h2>
+    <p>Das Urheberrecht bleibt bei mir. Mit vollständiger Bezahlung erhalten Sie das zeitlich, räumlich und inhaltlich unbeschränkte Recht, die fertige Website für Ihren Betrieb zu nutzen, zu ändern und zu betreiben. Werkzeuge, Bausteine und Programmteile, die ich für mehrere Projekte verwende, bleiben bei mir, Sie erhalten daran das Nutzungsrecht für diese Website. Bis zur vollständigen Bezahlung bleiben die Nutzungsrechte bei mir, und ich darf die Übergabe zurückhalten.</p>
+    <p>Ich darf die fertige Website mit Namen und Link als Referenz zeigen. Beim Einführungsangebot ist das Teil der Gegenleistung, sonst nur mit Ihrer Zustimmung.</p>
+
+    <h2>10. Gewährleistung und Haftung</h2>
+    <p>Es gelten die gesetzlichen Gewährleistungsrechte. Unternehmer melden offensichtliche Mängel bitte innerhalb von 14 Tagen nach der Übergabe. Ich hafte nach den gesetzlichen Bestimmungen. Gegenüber Unternehmern hafte ich bei leichter Fahrlässigkeit nicht, ausgenommen bei Personenschäden. Für entgangenen Gewinn und mittelbare Schäden hafte ich gegenüber Unternehmern nur bei Vorsatz oder grober Fahrlässigkeit, und die Haftung ist der Höhe nach mit dem Auftragswert begrenzt. Für Ihre Inhalte und deren Sicherung außerhalb der Betreuung sind Sie verantwortlich.</p>
+
+    <h2>11. Rücktritt vor der Fertigstellung</h2>
+    <p>Treten Sie vor der Fertigstellung vom Vertrag zurück, ohne dass ich dafür einen Grund gesetzt habe, bezahlen Sie die bis dahin erbrachten Leistungen. Bereits geleistete Zahlungen rechne ich darauf an. Weitergehende gesetzliche Ansprüche nach § 1168 ABGB bleiben unberührt. Das Rücktrittsrecht für Verbraucher steht auf der Seite <a href="{P("/widerruf/")}">Widerrufsrecht</a>.</p>
+
+    <h2>12. Datenschutz</h2>
+    <p>Wie ich personenbezogene Daten verarbeite, steht in der <a href="{P("/datenschutz/")}">Datenschutzerklärung</a>.</p>
+
+    <h2>13. Streitbeilegung für Verbraucher</h2>
+    <p>Ich habe mich nicht verpflichtet, an Verfahren vor einer Verbraucherschlichtungsstelle teilzunehmen, und bin dazu auch nicht gesetzlich verpflichtet. Können wir einen Streit nicht beilegen, nenne ich Ihnen in Textform die zuständige Schlichtungsstelle und teile mit, ob ich an einem Verfahren teilnehme (§ 19 Abs. 3 Alternative-Streitbeilegung-Gesetz). Die Online-Streitbeilegungs-Plattform der EU wurde am 20. Juli 2025 eingestellt.</p>
+
+    <h2>14. Schlussbestimmungen</h2>
+    <p>Es gilt österreichisches Recht, ohne die Verweisungsnormen und das UN-Kaufrecht. Für Verbraucher bleiben zwingende Verbraucherschutzvorschriften des Staates unberührt, in dem sie ihren gewöhnlichen Aufenthalt haben. Für Unternehmer ist das für meinen Sitz sachlich zuständige Gericht zuständig, für Verbraucher gilt der gesetzliche Gerichtsstand. Änderungen und Ergänzungen bedürfen der Schriftform, eine E-Mail genügt. Ist eine Bestimmung unwirksam, bleibt der Rest gültig. Es gilt die Fassung, die bei der Auftragserteilung auf dieser Seite stand.</p>'''
+    return ("/agb/", "Allgemeine Geschäftsbedingungen",
+            "Allgemeine Geschäftsbedingungen für Webdesign von Simon Monu: Angebot, Ablauf, Korrekturrunden, Zahlung, Betreuung, Rechte, Haftung.",
+            _rechtsseite("Allgemeine Geschäftsbedingungen", "Für Webdesign, Programmierung, Hosting und Betreuung von Simon Monu. Ein schriftliches Angebot geht diesen Bedingungen vor. Für Verbraucher gilt zusätzlich das Widerrufsrecht.",
+                         koerper, "Stand: Oktober 2026"),
+            {"og": "start", "robots": "noindex, follow"})
+
+
+def widerruf():
+    koerper = f'''
+    <h2>Für wen gilt das?</h2>
+    <p>Dieses Rücktrittsrecht (Widerrufsrecht) haben nur Verbraucher, also Personen, die den Vertrag überwiegend außerhalb ihrer gewerblichen oder beruflichen Tätigkeit abschließen (§ 1 Konsumentenschutzgesetz). Unternehmer haben es nicht.</p>
+
+    <h2>Widerrufsbelehrung</h2>
+    <p><strong>Widerrufsrecht.</strong> Sie haben das Recht, binnen 14 Tagen ohne Angabe von Gründen diesen Vertrag zu widerrufen. Die Widerrufsfrist beträgt 14 Tage ab dem Tag des Vertragsabschlusses.</p>
+    <p>Um Ihr Widerrufsrecht auszuüben, müssen Sie mir, Simon Monu, {_anschrift_zeile()}, E-Mail <a href="mailto:{MAIL}">{MAIL}</a>, mittels einer eindeutigen Erklärung (zum Beispiel ein mit der Post versandter Brief oder eine E-Mail) mitteilen, dass Sie diesen Vertrag widerrufen. Sie können dafür das beigefügte Muster-Widerrufsformular verwenden, das jedoch nicht vorgeschrieben ist. Zur Wahrung der Widerrufsfrist reicht es aus, dass Sie die Mitteilung über die Ausübung des Widerrufsrechts vor Ablauf der Widerrufsfrist absenden.</p>
+    <p><strong>Folgen des Widerrufs.</strong> Wenn Sie diesen Vertrag widerrufen, habe ich Ihnen alle Zahlungen, die ich von Ihnen erhalten habe, unverzüglich und spätestens binnen 14 Tagen ab dem Tag zurückzuzahlen, an dem die Mitteilung über Ihren Widerruf bei mir eingegangen ist. Für diese Rückzahlung verwende ich dasselbe Zahlungsmittel, das Sie bei der ursprünglichen Zahlung eingesetzt haben, es sei denn, mit Ihnen wurde ausdrücklich etwas anderes vereinbart. Auf keinen Fall werden Ihnen wegen dieser Rückzahlung Entgelte berechnet.</p>
+    <p>Haben Sie verlangt, dass die Dienstleistung während der Widerrufsfrist beginnen soll, so haben Sie mir einen angemessenen Betrag zu zahlen. Er entspricht dem Anteil der Leistungen, die ich bis zu dem Zeitpunkt erbracht habe, zu dem Sie mich von der Ausübung des Widerrufsrechts unterrichten, im Vergleich zum Gesamtumfang der im Vertrag vorgesehenen Leistungen.</p>
+    <p><strong>Vorzeitiges Erlöschen.</strong> Das Widerrufsrecht erlischt bei einem Vertrag über eine Dienstleistung, sobald ich die Dienstleistung vollständig erbracht habe und mit der Ausführung erst begonnen habe, nachdem Sie dazu Ihre ausdrückliche Zustimmung gegeben und gleichzeitig Ihre Kenntnis davon bestätigt haben, dass Sie Ihr Widerrufsrecht bei vollständiger Vertragserfüllung durch mich verlieren.</p>
+
+    <h2>Wenn Sie früher beginnen möchten</h2>
+    <p>Ich beginne vor Ablauf der Widerrufsfrist nur, wenn Sie das ausdrücklich verlangen. Dafür bestätigen Sie in Ihrer Annahme des Angebots den folgenden Satz. Ohne diese ausdrückliche Zustimmung beginne ich erst nach Ablauf der Widerrufsfrist:</p>
+    <blockquote class="zitat-satz"><p>„Ich verlange ausdrücklich, dass Simon Monu vor Ablauf der Widerrufsfrist mit der Leistung beginnt. Mir ist bekannt, dass ich mein Widerrufsrecht bei vollständiger Vertragserfüllung durch Simon Monu verliere.“</p></blockquote>
+
+    <h2>Muster-Widerrufsformular</h2>
+    <p>Wenn Sie den Vertrag widerrufen wollen, können Sie dieses Formular ausfüllen und an mich zurücksenden.</p>
+    <ul>
+      <li>An Simon Monu, {_anschrift_zeile()}, E-Mail: <a href="mailto:{MAIL}">{MAIL}</a>:</li>
+      <li>Hiermit widerrufe(n) ich/wir (*) den von mir/uns (*) abgeschlossenen Vertrag über die Erbringung der folgenden Dienstleistung (*):</li>
+      <li>Bestellt am (*) / erhalten am (*):</li>
+      <li>Name des/der Verbraucher(s):</li>
+      <li>Anschrift des/der Verbraucher(s):</li>
+      <li>Unterschrift des/der Verbraucher(s) (nur bei Mitteilung auf Papier):</li>
+      <li>Datum:</li>
+    </ul>
+    <p class="klein">(*) Unzutreffendes streichen.</p>
+
+    <h2>Außerhalb des Widerrufs</h2>
+    <p>Bei Mängeln gelten die gesetzlichen Gewährleistungsrechte, Fehler auf meiner Seite behebe ich kostenlos. Für einen Rücktritt ohne Widerrufsrecht gilt Punkt 11 der <a href="{P("/agb/")}">Allgemeinen Geschäftsbedingungen</a>.</p>'''
+    return ("/widerruf/", "Widerrufsrecht",
+            "Widerrufsbelehrung und Muster-Widerrufsformular für Verbraucher: 14 Tage Rücktrittsrecht bei Verträgen mit Simon Monu.",
+            _rechtsseite("Widerrufsrecht", "Für Verbraucher: Sie können einen Vertrag mit mir binnen 14 Tagen ohne Angabe von Gründen widerrufen. Unternehmer haben dieses Recht nicht.",
+                         koerper, "Stand: Oktober 2026"),
             {"og": "start", "robots": "noindex, follow"})
 
 
@@ -594,4 +731,4 @@ def fehler():
 
 
 def alle():
-    return [startseite(), leistungen(), handwerk(), ueber_mich(), kontakt(), danke(), impressum(), datenschutz(), fehler()]
+    return [startseite(), leistungen(), handwerk(), ueber_mich(), kontakt(), danke(), impressum(), datenschutz(), cookies(), agb(), widerruf(), fehler()]

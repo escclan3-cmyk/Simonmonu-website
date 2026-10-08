@@ -32,7 +32,7 @@ def farbreihe(farben):
 
 def spez_tabelle(zeilen):
     z = "".join(f"<tr><th scope=\"row\">{e(a)}</th><td>{b}</td></tr>" for a, b in zeilen)
-    return f'<div class="tab-wrap"><table class="tabelle tabelle-spez"><tbody>{z}</tbody></table></div>'
+    return f'<div class="tab-wrap" tabindex="0" role="region" aria-label="{tr("Eckdaten", "Key facts")}"><table class="tabelle tabelle-spez"><tbody>{z}</tbody></table></div>'
 
 
 def case_kopf(titel, marke, sub, id, links):
@@ -93,7 +93,7 @@ def arbeiten():
 <section class="sek sek-hand" aria-labelledby="h-hand"><div class="wrap">
   <h2 id="h-hand" class="t-l">Vier Handschriften</h2>
   <p class="lead">Vier Seiten, vier Aufgaben, vier Auftritte. Der Beleg dafür, dass ich nicht aus einer Vorlage baue.</p>
-  <div class="tab-wrap"><table class="tabelle"><caption>Grundfarbe, Schriften und Charakter der vier Seiten</caption>
+  <div class="tab-wrap" tabindex="0" role="region" aria-label="Grundfarbe, Schriften und Charakter der vier Seiten"><table class="tabelle"><caption>Grundfarbe, Schriften und Charakter der vier Seiten</caption>
   <thead><tr><th scope="col">Seite</th><th scope="col">Grund</th><th scope="col">Schriften</th><th scope="col">Farbe</th><th scope="col">Ton</th></tr></thead>
   <tbody>{zeilen}</tbody></table></div>
 </div></section>

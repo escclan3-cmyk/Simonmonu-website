@@ -340,6 +340,12 @@ html.js:not(.ruhig) .masslinie:not(.an)::after,html.js:not(.ruhig) .masslinie:no
 .feld textarea:focus-visible{outline:none;border-color:var(--signal);box-shadow:inset 0 0 0 1px var(--signal)}
 .feld [aria-invalid="true"]{border-color:var(--signal)}
 .feld-fehler{font-size:var(--t-klein);color:var(--signal)}
+.feld-zustimmung{grid-template-columns:24px 1fr;gap:6px 12px;align-items:start}
+.feld-zustimmung input[type=checkbox]{width:24px;height:24px;min-height:24px;margin:1px 0 0;padding:0;border:0;accent-color:var(--signal);cursor:pointer}
+.feld-zustimmung label{font-weight:400;color:var(--tinte-2);line-height:1.55;max-width:44em;cursor:pointer}
+.feld-zustimmung input[type=checkbox]:focus-visible{outline:2px solid var(--signal);outline-offset:2px;box-shadow:none}
+.feld-zustimmung input[aria-invalid="true"]{outline:2px solid var(--signal);outline-offset:2px}
+.feld-zustimmung .feld-fehler{grid-column:1/-1}
 .falle{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 .formular-fuss{display:flex;flex-wrap:wrap;align-items:center;gap:14px 24px;margin-top:6px}
 .formular-fuss .klein{max-width:34em}
@@ -489,10 +495,15 @@ html.js:not(.ruhig) .masslinie:not(.an)::after,html.js:not(.ruhig) .masslinie:no
 /* Rechtstexte */
 .rechtstext-innen{grid-column:1/-1;max-width:44em}
 @media (min-width:1024px){.rechtstext-innen{grid-column:1/9}}
+.rechtstext h1{overflow-wrap:break-word;hyphens:auto}
+@media (max-width:600px){.rechtstext h1.t-xl{font-size:clamp(28px,8.2vw,40px)}}
+.tabelle-speicher tbody th{white-space:nowrap}
 .rechtstext h2{font-size:var(--t-lead);letter-spacing:-.015em;margin-top:2em;margin-bottom:.35em}
 .rechtstext ul{list-style:"– ";padding-left:1em;display:grid;gap:8px;margin-top:8px}
 .rechtstext p,.rechtstext li{color:var(--tinte-2)}
 .stand{margin-top:2.6em}
+.rechtstext .zitat-satz{margin:12px 0;padding:2px 0 2px 18px;border-left:2px solid var(--linie-stark)}
+.rechtstext .zitat-satz p{margin:0;color:var(--tinte)}
 
 /* 404 */
 .fehler-text{grid-column:1/-1}

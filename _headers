@@ -13,6 +13,9 @@
 /404.html
   Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self' https://formspree.io/f/xwlpyyoq; media-src 'self'; frame-src 'self'; form-action 'self' https://formspree.io/f/xwlpyyoq; base-uri 'self'; object-src 'none'; manifest-src 'self'; frame-ancestors 'none'; upgrade-insecure-requests
 
+/agb/
+  Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self' https://formspree.io/f/xwlpyyoq; media-src 'self'; frame-src 'self'; form-action 'self' https://formspree.io/f/xwlpyyoq; base-uri 'self'; object-src 'none'; manifest-src 'self'; frame-ancestors 'none'; upgrade-insecure-requests
+
 /arbeiten/
   Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self' https://formspree.io/f/xwlpyyoq; media-src 'self'; frame-src 'self'; form-action 'self' https://formspree.io/f/xwlpyyoq; base-uri 'self'; object-src 'none'; manifest-src 'self'; frame-ancestors 'none'; upgrade-insecure-requests
 
@@ -23,6 +26,9 @@
   Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self' https://formspree.io/f/xwlpyyoq; media-src 'self'; frame-src 'self'; form-action 'self' https://formspree.io/f/xwlpyyoq; base-uri 'self'; object-src 'none'; manifest-src 'self'; frame-ancestors 'none'; upgrade-insecure-requests
 
 /arbeiten/nickmonu/
+  Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self' https://formspree.io/f/xwlpyyoq; media-src 'self'; frame-src 'self'; form-action 'self' https://formspree.io/f/xwlpyyoq; base-uri 'self'; object-src 'none'; manifest-src 'self'; frame-ancestors 'none'; upgrade-insecure-requests
+
+/cookies/
   Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self' https://formspree.io/f/xwlpyyoq; media-src 'self'; frame-src 'self'; form-action 'self' https://formspree.io/f/xwlpyyoq; base-uri 'self'; object-src 'none'; manifest-src 'self'; frame-ancestors 'none'; upgrade-insecure-requests
 
 /danke/
@@ -40,6 +46,9 @@
 /en/contact/
   Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self' https://formspree.io/f/xwlpyyoq; media-src 'self'; frame-src 'self'; form-action 'self' https://formspree.io/f/xwlpyyoq; base-uri 'self'; object-src 'none'; manifest-src 'self'; frame-ancestors 'none'; upgrade-insecure-requests
 
+/en/cookies/
+  Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self' https://formspree.io/f/xwlpyyoq; media-src 'self'; frame-src 'self'; form-action 'self' https://formspree.io/f/xwlpyyoq; base-uri 'self'; object-src 'none'; manifest-src 'self'; frame-ancestors 'none'; upgrade-insecure-requests
+
 /en/legal-notice/
   Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self' https://formspree.io/f/xwlpyyoq; media-src 'self'; frame-src 'self'; form-action 'self' https://formspree.io/f/xwlpyyoq; base-uri 'self'; object-src 'none'; manifest-src 'self'; frame-ancestors 'none'; upgrade-insecure-requests
 
@@ -49,10 +58,16 @@
 /en/services/
   Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self' https://formspree.io/f/xwlpyyoq; media-src 'self'; frame-src 'self'; form-action 'self' https://formspree.io/f/xwlpyyoq; base-uri 'self'; object-src 'none'; manifest-src 'self'; frame-ancestors 'none'; upgrade-insecure-requests
 
+/en/terms/
+  Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self' https://formspree.io/f/xwlpyyoq; media-src 'self'; frame-src 'self'; form-action 'self' https://formspree.io/f/xwlpyyoq; base-uri 'self'; object-src 'none'; manifest-src 'self'; frame-ancestors 'none'; upgrade-insecure-requests
+
 /en/thanks/
   Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self' https://formspree.io/f/xwlpyyoq; media-src 'self'; frame-src 'self'; form-action 'self' https://formspree.io/f/xwlpyyoq; base-uri 'self'; object-src 'none'; manifest-src 'self'; frame-ancestors 'none'; upgrade-insecure-requests
 
 /en/trades/
+  Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self' https://formspree.io/f/xwlpyyoq; media-src 'self'; frame-src 'self'; form-action 'self' https://formspree.io/f/xwlpyyoq; base-uri 'self'; object-src 'none'; manifest-src 'self'; frame-ancestors 'none'; upgrade-insecure-requests
+
+/en/withdrawal/
   Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self' https://formspree.io/f/xwlpyyoq; media-src 'self'; frame-src 'self'; form-action 'self' https://formspree.io/f/xwlpyyoq; base-uri 'self'; object-src 'none'; manifest-src 'self'; frame-ancestors 'none'; upgrade-insecure-requests
 
 /en/work/
@@ -80,6 +95,9 @@
   Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self' https://formspree.io/f/xwlpyyoq; media-src 'self'; frame-src 'self'; form-action 'self' https://formspree.io/f/xwlpyyoq; base-uri 'self'; object-src 'none'; manifest-src 'self'; frame-ancestors 'none'; upgrade-insecure-requests
 
 /ueber-mich/
+  Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self' https://formspree.io/f/xwlpyyoq; media-src 'self'; frame-src 'self'; form-action 'self' https://formspree.io/f/xwlpyyoq; base-uri 'self'; object-src 'none'; manifest-src 'self'; frame-ancestors 'none'; upgrade-insecure-requests
+
+/widerruf/
   Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self' https://formspree.io/f/xwlpyyoq; media-src 'self'; frame-src 'self'; form-action 'self' https://formspree.io/f/xwlpyyoq; base-uri 'self'; object-src 'none'; manifest-src 'self'; frame-ancestors 'none'; upgrade-insecure-requests
 
 /demos/nickmonu/*
