@@ -3,3 +3,6 @@
 
 # /court skill run outputs (.claude/skills/court)
 .court/
+
+# Python bytecode from running generator/bau.py
+__pycache__/
