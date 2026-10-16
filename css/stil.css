@@ -644,3 +644,9 @@ html.js:not(.ruhig):not(.frei) .hero-innen>.hero-text:not(.an){opacity:0;transfo
 .werke-live{margin-top:var(--sektion);padding-top:var(--luft);border-top:1px solid var(--linie)}
 .werke-live .lead{margin-bottom:var(--luft);max-width:40em}
 @media (max-width:600px){.tabelle .preis-spalte{white-space:normal;min-width:7.5em}}
+
+/* Zahlenleiste: zwei Kennzahlen zwischen Haarlinien, Zahl in Signalfarbe */
+.zahlen{display:flex;flex-wrap:wrap;gap:20px clamp(32px,6vw,96px);margin-top:clamp(32px,4vw,56px);padding-block:22px;border-block:1px solid var(--linie)}
+.zahlen>div{display:flex;flex-direction:column-reverse;gap:4px}
+.zahlen dd{margin:0;font-size:var(--t-xl);line-height:1;letter-spacing:-.035em;font-weight:500;color:var(--signal);font-variant-numeric:tabular-nums}
+.zahlen dt{color:var(--tinte-2);font-size:var(--t-klein)}
