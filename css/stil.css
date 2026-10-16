@@ -315,11 +315,12 @@ html:not(.js) .reel-ton{display:none}
 .cta-innen .knoepfe{margin-top:32px}
 /* Fotos: Kopfbereich rechts neben dem Text, Schluss links neben dem Text. Rahmen wie bei den Arbeiten. */
 :is(.hero-foto,.cta-foto){margin:0;overflow:hidden;border-radius:var(--ecke);outline:1px solid rgb(255 255 255 / .1);outline-offset:-1px;background:#000}
-:is(.hero-foto,.cta-foto) img{width:100%;aspect-ratio:1/1;object-fit:cover}
+/* Kopf-Foto quer (3:2), damit der Kopfbereich nicht höher wird als der Text daneben und die Arbeiten früh ins Bild kommen */
+.hero-foto img{width:100%;aspect-ratio:3/2;object-fit:cover}
+.cta-foto img{width:100%;aspect-ratio:4/3;object-fit:cover}
 .cta-innen{display:grid;gap:var(--luft)}
 @media (min-width:1024px){
-  .hero-foto{grid-column:8/13;grid-row:2}
-  :is(.hero-foto,.cta-foto) img{aspect-ratio:4/5}
+  .hero-foto{grid-column:9/13;grid-row:2;align-self:end}
   .cta-innen{grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--spalte);align-items:center}
   .cta-foto{grid-column:1/6;grid-row:1}.cta-block{grid-column:7/13;grid-row:1}
 }
