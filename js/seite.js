@@ -169,6 +169,35 @@ function messung(){
   });
 })();
 
+/* Motion-Reel: die Datei lädt erst kurz bevor das Video ins Bild kommt (am Handy die kleine), spielt stumm in Schleife
+   und hält an, sobald es aus dem Bild ist. Ein Klick (oder Enter) aufs Video zeigt es im Vollbild mit Ton von vorn.
+   Der Knopf schaltet nur den Ton auf der Seite. Bei reduzierter Bewegung: normale Steuerelemente, kein Autostart. */
+(function(){
+  var r=$('[data-reel]');if(!r)return;
+  var v=$('video',r),k=$('[data-reel-ton]',r),geladen=false;
+  function laden(){if(geladen)return;geladen=true;var gross=matchMedia('(min-width: 768px)').matches;
+    v.src=v.getAttribute(gross?'data-src-gross':'data-src-klein');v.load()}
+  function spiel(){var p=v.play();if(p&&p.catch)p.catch(function(){})}
+  function knopf(){k.setAttribute('aria-pressed',v.muted?'false':'true');k.textContent=v.muted?(EN?'Sound on':'Ton an'):(EN?'Sound off':'Ton aus')}
+  if(red){v.setAttribute('controls','');k.hidden=true;r.addEventListener('click',laden,{once:true});return}
+  function vollbild(){
+    laden();v.muted=false;knopf();try{v.currentTime=0}catch(_){}spiel();
+    if(v.requestFullscreen){var p=v.requestFullscreen();if(p&&p.catch)p.catch(function(){})}
+    else if(v.webkitEnterFullscreen){try{v.webkitEnterFullscreen()}catch(_){}}
+  }
+  v.addEventListener('error',function(){v.controls=true},true);
+  v.addEventListener('click',vollbild);
+  v.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();vollbild()}});
+  document.addEventListener('fullscreenchange',function(){var an=document.fullscreenElement===v;v.controls=an;if(!an){v.muted=true;knopf();spiel()}});
+  v.addEventListener('webkitendfullscreen',function(){v.muted=true;knopf();spiel()});
+  if(!('IntersectionObserver' in window)){laden();spiel()}
+  else{
+    new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)laden()})},{rootMargin:'600px 0px'}).observe(r);
+    new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){laden();spiel()}else if(document.fullscreenElement!==v)v.pause()})},{threshold:.35}).observe(r);
+  }
+  k.addEventListener('click',function(e){e.stopPropagation();laden();v.muted=!v.muted;knopf();if(!v.muted){try{v.currentTime=0}catch(_){}}spiel()});
+})();
+
 /* Schaufenster: die Arbeiten laufen live in einem Fenster. Am Desktop wird die Seite in voller Breite (1440 px)
    gerendert und verkleinert, damit man die Desktop-Fassung sieht; schmaler als 700 px zeigt das Fenster die Handy-Fassung. */
 (function(){
@@ -229,7 +258,7 @@ function messung(){
     z.classList.toggle('aus',!an);
     z.classList.toggle('dunkel',!!el.closest(BUEHNE));
     var a=el.closest('a,button,summary,label,.schritt');
-    var etikett=el.closest('.werk-bild')?(EN?'View':'Ansehen'):el.closest('.sch-flaeche')?(EN?'Drag':'Ziehen'):(a&&a.getAttribute('data-zeiger'))||'';
+    var etikett=el.closest('.werk-bild,.reel-video')?(EN?'View':'Ansehen'):el.closest('.sch-flaeche')?(EN?'Drag':'Ziehen'):(a&&a.getAttribute('data-zeiger'))||'';
     z.classList.toggle('griff',!!a);
     t.textContent=etikett;z.classList.toggle('mit-text',!!etikett);
   });
@@ -253,7 +282,7 @@ addEventListener('keydown',function(e){if(e.key==='Escape'){var m=$('[data-menue
 /* Formular: Fehler stehen am Feld (aria-describedby), geprüft beim Absenden und danach beim Verlassen des Felds */
 $$('[data-formular]').forEach(function(f){
   var meld=$('[data-meldung]',f),ep=f.getAttribute('data-endpoint'),versucht=false;
-  var pre=/[?&]paket=(\w+)/.exec(location.search);var sel=$('select',f);if(pre&&sel)sel.value=pre[1];
+  var pre=/[?&]paket=(\w+)/.exec(location.search);var sel=$('#f-paket',f);if(pre&&sel)sel.value=pre[1];
   function pruefe(i){
     var v=i.value.trim(),txt='';
     if(!v)txt=EN?'Please fill this in.':'Bitte ausfüllen.';else if(i.type==='email'&&!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v))txt=EN?'Please enter a valid email address, for example name@company.com.':'Bitte eine gültige E-Mail-Adresse eingeben, zum Beispiel name@betrieb.at.';

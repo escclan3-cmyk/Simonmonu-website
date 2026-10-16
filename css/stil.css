@@ -124,7 +124,12 @@ noscript{display:none}
 .kopf{position:sticky;top:0;z-index:50;height:var(--kopfhoehe);display:flex;align-items:center;gap:16px;padding-inline:var(--rand)}
 /* Fläche auf eigener Ebene: backdrop-filter am Kopf selbst würde das feste Menü-Blatt einsperren */
 .kopf::before{content:"";position:absolute;inset:0;z-index:-1;background:color-mix(in srgb,var(--papier) 90%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--linie)}
-.kopf-name{font-weight:500;font-size:17px;text-decoration:none;letter-spacing:-.01em;margin-right:auto;padding-block:8px}
+.kopf-name{font-weight:500;font-size:17px;text-decoration:none;letter-spacing:-.01em;margin-right:auto;padding-block:12px;color:var(--tinte)}
+/* Wortmarke „Simon Monu.“: Buchstaben in Textfarbe, Quadrat in Signalfarbe (hell #2D55E8, dunkel #8AABFF wie in der Marke) */
+.wortmarke{display:block;height:18px;width:auto;overflow:visible}
+.fuss-name .wortmarke{height:clamp(26px,3vw,40px)}
+.wm-punkt{fill:var(--signal)}
+@media (min-width:1024px){.wortmarke{height:20px}}
 .kopf-nav{display:none;gap:30px}
 .kopf-nav a{text-decoration:none;font-size:15px;padding:8px 0;position:relative;color:var(--tinte-2);transition:color 160ms var(--e-schnell)}
 .kopf-nav a::after{content:"";position:absolute;left:0;right:0;bottom:3px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform 300ms var(--e-aus)}
@@ -225,12 +230,12 @@ html.js:not(.ruhig) .masslinie:not(.an)::after,html.js:not(.ruhig) .masslinie:no
 /* Unten liegt die fertige Seite, darüber die Rohfassung, sichtbar links von --x. Bilder sind immer hell,
    darum haben Linie, Griff und Marken feste Farben statt der Themen-Tokens. */
 @property --x{syntax:"<percentage>";inherits:true;initial-value:50%}
-.schieber-kopf{display:grid;gap:14px;margin-bottom:var(--luft)}
-.schieber-kopf .lead{margin-top:0}
+:is(.schieber-kopf,.reel-kopf){display:grid;gap:14px;margin-bottom:var(--luft)}
+:is(.schieber-kopf,.reel-kopf) .lead{margin-top:0}
 @media (min-width:1024px){
-  .schieber-kopf{grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--spalte);align-items:end}
-  .schieber-kopf h2{grid-column:1/7}
-  .schieber-kopf .lead{grid-column:8/13;max-width:none}
+  :is(.schieber-kopf,.reel-kopf){grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--spalte);align-items:end}
+  :is(.schieber-kopf,.reel-kopf) h2{grid-column:1/7}
+  :is(.schieber-kopf,.reel-kopf) .lead{grid-column:8/13;max-width:none}
 }
 .schieber{--x:50%;margin:0;position:relative}
 .sch-flaeche{position:relative;overflow:hidden;background:#fff;outline:1px solid var(--linie-stark);outline-offset:-1px;
@@ -261,6 +266,21 @@ html.js:not(.ruhig) .masslinie:not(.an)::after,html.js:not(.ruhig) .masslinie:no
 @media (min-width:640px){.schieber-schritte{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (min-width:1024px){.schieber-schritte{grid-template-columns:repeat(4,minmax(0,1fr));margin-top:32px}.schieber-schritte li{border-top-color:var(--tinte)}}
 
+/* --- Motion-Reel --------------------------------------------------------------------------------------------- */
+.reel{margin:0}
+.reel-rahmen{position:relative;aspect-ratio:1656/932;background:#0A0A0C;overflow:hidden;outline:1px solid var(--linie);outline-offset:-1px}
+.reel-video{display:block;width:100%;height:100%;object-fit:cover;cursor:pointer}
+.reel-video:focus-visible{outline:2px solid #2D55E8;outline-offset:-4px}
+.reel-video:fullscreen{object-fit:contain;background:#000;cursor:auto}
+.reel-ton{position:absolute;right:14px;bottom:14px;min-height:40px;padding:0 14px;border:0;background:#F4F4F1;color:#0C1A33;
+  font-size:var(--t-klein);font-weight:500;cursor:pointer;transition:background-color 160ms var(--e-schnell)}
+.reel-ton:hover{background:#fff}
+.reel-ton:focus-visible{outline:2px solid #2D55E8;outline-offset:3px}
+.reel-ton[aria-pressed="true"]{background:#2D55E8;color:#fff}
+html:not(.js) .reel-ton{display:none}
+.reel-fuss{margin-top:20px;display:flex;flex-wrap:wrap;gap:6px 24px;align-items:baseline;justify-content:space-between;color:var(--tinte-2)}
+@media (min-width:1024px){.reel-ton{right:20px;bottom:20px}}
+
 /* --- Pakete (Datenblatt) -------------------------------------------------------------------------------------- */
 .datenblatt{width:100%;border-collapse:collapse;text-align:left}
 .datenblatt thead th{font-weight:400;font-size:var(--t-klein);color:var(--tinte-3);padding:0 16px 10px 0;border-bottom:1px solid var(--tinte)}
@@ -268,7 +288,6 @@ html.js:not(.ruhig) .masslinie:not(.an)::after,html.js:not(.ruhig) .masslinie:no
 .datenblatt tbody th{width:32%;color:var(--tinte)}
 .db-name{display:inline-block;font-size:var(--t-m);letter-spacing:-.02em;font-weight:500;text-decoration:none;line-height:1.15}
 .db-name:hover{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.18em}
-@media (pointer:coarse){.db-name{padding-block:10px;margin-block:-10px}}
 .db-fuer{display:block;margin-top:6px;color:var(--tinte-2);font-size:15px;max-width:26em}
 .datenblatt .db-preis{text-align:right;padding-right:0;white-space:nowrap}
 .db-preis>span:first-child{display:block;font-size:var(--t-m);font-weight:500;letter-spacing:-.02em;color:var(--tinte);line-height:1.15}
@@ -284,6 +303,7 @@ html.js:not(.ruhig) .masslinie:not(.an)::after,html.js:not(.ruhig) .masslinie:no
   .datenblatt td::before{content:attr(data-l);display:block;font-size:var(--t-klein);color:var(--tinte-3)}
   .datenblatt .db-preis{grid-column:1/-1;text-align:left;margin-top:6px}
   .datenblatt .db-preis::before{display:none}
+  .datenblatt-drei td{grid-column:1/-1}
 }
 .pakete-fuss{display:grid;gap:10px;margin-top:22px}
 .einfuehrung{max-width:44em;color:var(--tinte-2)}
@@ -418,7 +438,6 @@ html.js:not(.ruhig) .masslinie:not(.an)::after,html.js:not(.ruhig) .masslinie:no
 .pakete-fuss .preis-hinweis{margin-top:0}
 .sek-einf .einf-text,.empf-text{grid-column:1/-1;max-width:44em}
 @media (min-width:1024px){.sek-einf .einf-text,.empf-text{grid-column:1/9}}
-.einf-text p:not(.lead),.empf-text p:not(.lead){max-width:36em}
 .betreuung-text{grid-column:1/-1;max-width:34em}
 .betreuung-liste{grid-column:1/-1;display:grid;margin-top:22px}
 .betreuung-liste li{padding:14px 0;border-top:1px solid var(--linie);color:var(--tinte-2)}
@@ -581,7 +600,8 @@ html.intro:not(.frei):not(.intro-aus) :is(.kopf,main,.fuss){visibility:hidden}
 
 /* --- Zeiger: ein Zeichenkreuz. Über Links ein Auswahlrahmen, über den Arbeiten ein Etikett. Nur feine Zeigegeräte. */
 @media (pointer:fine){
-  html.zeiger,html.zeiger :is(a,button,summary,label,.werk-bild,.sch-flaeche){cursor:none}
+  html.zeiger,html.zeiger :is(a,button,summary,label,.werk-bild,.sch-flaeche,.reel-video){cursor:none}
+  html.zeiger .reel-video:fullscreen{cursor:auto}
   html.zeiger :is(input,textarea,select,iframe){cursor:auto}
   .zeiger-el{position:fixed;left:0;top:0;z-index:300;pointer-events:none;color:var(--tinte);will-change:transform;transition:opacity 160ms}
   .zeiger-el.aus{opacity:0}
