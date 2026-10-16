@@ -24,17 +24,16 @@ var START=(function(){var fs=[],ok=false;return{warte:function(f){ok?f():fs.push
 /* Per Doppelklick geöffnet (file://): Links auf Ordner zeigen sonst eine Dateiliste statt der Seite */
 if(DATEI)$$('a[href]').forEach(function(a){var h=a.getAttribute('href');if(/^(https?:|mailto:|tel:|#)/.test(h))return;a.setAttribute('href',h.replace(/(^|\/)(\?|#|$)/,function(m,s,r){return (s||'')+'index.html'+r}).replace(/^\.\/index\.html/,'index.html'))});
 
-/* Theme: System, Hell, Dunkel */
+/* Theme: Dunkel (Grundeinstellung) oder Hell */
 (function(){
   var b=$('[data-thema]');if(!b)return;
-  var txt=$('[data-thema-text]',b),folge={system:'hell',hell:'dunkel',dunkel:'system'},namen=EN?{system:'System',hell:'Light',dunkel:'Dark'}:{system:'System',hell:'Hell',dunkel:'Dunkel'};
-  function jetzt(){var a=root.getAttribute('data-theme');return a==='light'?'hell':a==='dark'?'dunkel':'system'}
+  var txt=$('[data-thema-text]',b),namen=EN?{hell:'Light',dunkel:'Dark'}:{hell:'Hell',dunkel:'Dunkel'};
+  function jetzt(){return root.getAttribute('data-theme')==='light'?'hell':'dunkel'}
   function zeige(){txt.textContent=(EN?'Appearance: ':'Darstellung: ')+namen[jetzt()]}
   b.addEventListener('click',function(){
     root.classList.add('umschalten');setTimeout(function(){root.classList.remove('umschalten')},60);
-    var n=folge[jetzt()];
-    if(n==='system'){root.removeAttribute('data-theme');try{localStorage.removeItem('sm-theme')}catch(e){}}
-    else{root.setAttribute('data-theme',n==='hell'?'light':'dark');try{localStorage.setItem('sm-theme',n)}catch(e){}}
+    if(jetzt()==='dunkel'){root.setAttribute('data-theme','light');try{localStorage.setItem('sm-theme','hell')}catch(e){}}
+    else{root.removeAttribute('data-theme');try{localStorage.removeItem('sm-theme')}catch(e){}}
     zeige();
   });
   zeige();
@@ -118,13 +117,11 @@ function messung(){
   });
 })();
 
-/* Beim Hinscrollen: Inhalte unterhalb des ersten Bildschirms erscheinen einmal. Was schon zu sehen ist, bleibt unberührt. */
+/* Beim Hinscrollen: nur die Aufnahmen der Arbeiten decken sich einmal auf (clip-path, sie bleiben dabei sichtbar).
+   Text steht immer sofort da; eine Einblendung auf jedem Abschnitt wäre Reflex, kein Moment. */
 (function(){
   if(red||!('IntersectionObserver' in window))return;
-  var SEL=['main h2.t-l','main h2.t-xl','main .statement','.werk-bild','.werk-info','.werke-mehr',
-    '.sek:not(.sek-hero):not(.sek-kopfseite) .lead','.datenblatt tbody tr','.pakete-fuss','.schiene li','.karte','.faq-liste','.betreuung-liste li',
-    '.prinzipien li','.text-spalte > p','.ueber-text','.kontakt-direkt','.kontakt-rechts','.tab-wrap','.farbreihe li','.vorher-nachher','.werte',
-    '.fenster','.drin-liste li','.code','.hilft-liste','.direkt','.zahlung','.einfuehrung','.schieber-schritte li'].join(',');
+  var SEL='.werk-bild';
   var io=new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting)return;io.unobserve(e.target);var t=e.target;
     requestAnimationFrame(function(){t.classList.add('da')})})},{rootMargin:'0px 0px -8% 0px',threshold:0});
   START.warte(function(){
