@@ -282,13 +282,14 @@ $$('[data-formular]').forEach(function(f){
   var pre=/[?&]paket=(\w+)/.exec(location.search);var sel=$('#f-paket',f);if(pre&&sel)sel.value=pre[1];
   function pruefe(i){
     var v=i.value.trim(),txt='';
-    if(!v)txt=EN?'Please fill this in.':'Bitte ausfüllen.';else if(i.type==='email'&&!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v))txt=EN?'Please enter a valid email address, for example name@company.com.':'Bitte eine gültige E-Mail-Adresse eingeben, zum Beispiel name@betrieb.at.';
+    if(i.type==='checkbox'){if(!i.checked)txt=EN?'Please tick this box to send the form.':'Bitte setzen Sie den Haken, um das Formular abzusenden.'}
+    else if(!v)txt=EN?'Please fill this in.':'Bitte ausfüllen.';else if(i.type==='email'&&!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v))txt=EN?'Please enter a valid email address, for example name@company.com.':'Bitte eine gültige E-Mail-Adresse eingeben, zum Beispiel name@betrieb.at.';
     var id=i.id+'-fehler',p=d.getElementById(id);
     if(txt){if(!p){p=d.createElement('p');p.className='feld-fehler';p.id=id;i.parentNode.appendChild(p)}p.textContent=txt;i.setAttribute('aria-invalid','true');i.setAttribute('aria-describedby',id)}
     else{if(p)p.remove();i.removeAttribute('aria-invalid');i.removeAttribute('aria-describedby')}
     return !txt;
   }
-  $$('[required]',f).forEach(function(i){i.addEventListener('blur',function(){if(versucht)pruefe(i)});i.addEventListener('input',function(){if(i.getAttribute('aria-invalid'))pruefe(i)})});
+  $$('[required]',f).forEach(function(i){i.addEventListener('blur',function(){if(versucht)pruefe(i)});i.addEventListener('input',function(){if(i.getAttribute('aria-invalid'))pruefe(i)});i.addEventListener('change',function(){if(i.getAttribute('aria-invalid'))pruefe(i)})});
   f.addEventListener('submit',function(e){
     versucht=true;var fehl=null;
     $$('[required]',f).forEach(function(i){if(!pruefe(i)&&!fehl)fehl=i});
