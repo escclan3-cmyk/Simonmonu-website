@@ -118,7 +118,10 @@ noscript{display:none}
 .kopf{position:sticky;top:0;z-index:50;height:var(--kopfhoehe);display:flex;align-items:center;gap:16px;padding-inline:var(--rand)}
 /* Volle Breite, deckend, eine Haarlinie unten. Fläche auf eigener Ebene, damit das feste Menü-Blatt frei bleibt. */
 .kopf::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--papier);border-bottom:1px solid var(--linie)}
-.kopf-name{font-weight:500;font-size:17px;text-decoration:none;letter-spacing:-.01em;margin-right:auto;padding-block:12px;color:var(--tinte)}
+.kopf-name{display:flex;align-items:center;gap:11px;font-weight:500;font-size:16px;line-height:1;text-decoration:none;letter-spacing:-.01em;margin-right:auto;padding-block:12px;color:var(--tinte)}
+/* Zeichen „S.“ im Kopf, daneben der Name in der Hausschrift. Höhe so, dass das S die Versalhöhe des Namens deutlich überragt. */
+.zeichen{display:block;height:22px;width:auto;flex:none}
+@media (min-width:1024px){.zeichen{height:24px}}
 /* Wortmarke „Simon Monu.“: Buchstaben in Textfarbe, Quadrat in Signalfarbe (hell #2D55E8, dunkel #8AABFF wie in der Marke) */
 .wortmarke{display:block;height:18px;width:auto;overflow:visible}
 .fuss-name .wortmarke{height:clamp(26px,3vw,40px)}
